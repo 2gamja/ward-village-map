@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 
 BASE_DIR = Path(__file__).parent
 TEMPLATE_DIR = BASE_DIR / "templates"
-OUTPUT_DIR = BASE_DIR / "output"
+OUTPUT_DIR = BASE_DIR  # GitHub Pages는 루트의 index.html을 찾음
 DATA_FILE = BASE_DIR / "ward_village_data.json"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -76,5 +76,6 @@ if __name__ == "__main__":
     print(f"  파일: {output_path}")
     print(f"  크기: {output_path.stat().st_size:,} bytes")
     print(f"\n브라우저로 열기: file:///{output_path}")
+
 
 

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ward Village 시세맵</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #fafaf7;
+    }
+    header {
+      background: #9B1C2E;
+      color: white;
+      padding: 16px 24px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+
+    /* 커스텀 마커 스타일 */
+    .marker-completed,
+    .marker-construction {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 11px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      border: 2px solid white;
+    }
+    .marker-completed {
+      background: #9B1C2E;
+    }
+    .marker-construction {
+      background: #C99A6B;
+    }
+
+    /* 팝업 스타일 */
+    .leaflet-popup-content h3 {
+      margin: 0 0 4px 0;
+      font-size: 15px;
+      color: #9B1C2E;
+    }
+    .leaflet-popup-content p {
+      margin: 2px 0;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Ward Village 시세맵 — 호놀룰루 Kakaako</h1>
+  </header>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map("map").setView([21.2950, -157.8540], 16);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19
+    }).addTo(map);
+
+    // 13개 콘도 데이터
+    const towers = [
+      { name: "Waiea",                 year: 2016, status: "completed",          lat: 21.293447, lng: -157.853738 },
+      { name: "Anaha",                 year: 2017, status: "completed",          lat: 21.293687, lng: -157.852734 },
+      { name: "Ae'o",                  year: 2018, status: "completed",          lat: 21.295426, lng: -157.853085 },
+      { name: "Ke Kilohana",           year: 2019, status: "completed",          lat: 21.296916, lng: -157.855405 },
+      { name: "'A'ali'i",              year: 2021, status: "completed",          lat: 21.295877, lng: -157.853524 },
+      { name: "Ko'ula",                year: 2022, status: "completed",          lat: 21.294806, lng: -157.854626 },
+      { name: "Victoria Place",        year: 2024, status: "completed",          lat: 21.294099, lng: -157.854829 },
+      { name: "Ulana",                 year: 2025, status: "completed",          lat: 21.296320, lng: -157.857913 },
+      { name: "The Park Ward Village", year: 2026, status: "completed",          lat: 21.296337, lng: -157.855106 },
+      { name: "Kalae",                 year: 2027, status: "under_construction", lat: 21.295700, lng: -157.856500 },
+      { name: "The Launiu",            year: 2026, status: "under_construction", lat: 21.295644, lng: -157.857898 },
+      { name: "'Ilima",                year: 2030, status: "under_construction", lat: 21.293288, lng: -157.853103 },
+      { name: "Melia",                 year: 2028, status: "under_construction", lat: 21.293500, lng: -157.853500 }
+    ];
+
+    // 마커 일괄 추가
+    towers.forEach(tower => {
+      // status에 따라 클래스 결정
+      const cssClass = tower.status === "completed" ? "marker-completed" : "marker-construction";
+      const label = tower.year.toString().slice(-2); // 연도 끝 2자리 (예: 2016 → 16)
+
+      // 커스텀 마커 아이콘 생성
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="${cssClass}">${label}</div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+
+      // 팝업 내용
+      const popupContent = `
+        <h3>${tower.name}</h3>
+        <p>완공: ${tower.year}년</p>
+        <p>상태: ${tower.status === "completed" ? "완공" : "건설 중"}</p>
+      `;
+
+      // 지도에 마커 추가
+      L.marker([tower.lat, tower.lng], { icon: icon })
+        .addTo(map)
+        .bindPopup(popupContent);
+    });
+  </script>
+
+</body>
+</html>

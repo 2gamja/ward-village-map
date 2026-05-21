@@ -1,0 +1,1114 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ward Village 시세맵</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    :root {
+      /* 색상 토큰 */
+      --color-primary: #9B1C2E;
+      --color-accent: #C99A6B;
+      --color-bg: #fafaf7;
+      --color-text-primary: #333;
+      --color-text-secondary: #555;
+      --color-text-muted: #888;
+      --color-text-faint: #aaa;
+      --color-success: #2E7D32;
+      --color-success-deep: #1B5E20;
+      --color-danger: #C62828;
+      --color-warm-bg: #FAF4E8;
+      --color-warm-bg-light: #F5EFE3;
+      --color-warm-border: #C99A6B;
+      --color-warm-text: #6B4F2A;
+      --color-original-null: #9C7C4D;
+
+      /* 간격 토큰 (8-point grid) */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 14px;
+      --space-lg: 24px;
+
+      /* 그림자 */
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 2px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--color-bg);
+      line-height: 1.5;
+      color: var(--color-text-primary);
+    }
+    header {
+      background: var(--color-primary);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    header .meta {
+      font-size: 11px;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 3px;
+      border-radius: 6px;
+    }
+    .tab-btn {
+      padding: 6px 14px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .tab-btn:hover { color: white; }
+    .tab-btn.active {
+      background: white;
+      color: var(--color-primary);
+    }
+
+    /* 인사이트 패널 */
+    .insights-panel {
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    .insights-row {
+      display: flex;
+      align-items: stretch;
+    }
+    .insights-summary {
+      border-bottom: 1px solid #eee;
+    }
+    .insights-segment {
+      flex: 1;
+      padding: 10px 18px;
+      border-right: 1px solid #eee;
+      min-width: 0;
+    }
+    .insights-segment:last-child {
+      border-right: none;
+    }
+    .insights-luxury {
+      background: var(--color-warm-bg);
+    }
+
+    /* 시장 요약 영역 */
+    .seg-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .seg-count {
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .seg-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: help;
+    }
+    .seg-metrics {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .metric {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+    .metric-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+    .metric-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .metric-sep {
+      color: var(--color-text-faint);
+    }
+
+    /* TOP 매물 영역 */
+    .top-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding: 1px 0;
+    }
+    .top-scope {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: var(--color-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .top-unit {
+      color: var(--color-text-primary);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .top-value {
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .top-value.positive { color: var(--color-success); }
+    .top-value.negative { color: var(--color-danger); }
+    .top-value.yield { color: var(--color-success-deep); }
+
+    /* 모바일 토글 버튼 — 데스크탑에서는 숨김 */
+    .insights-toggle {
+      display: none;
+      padding: 8px 14px;
+      background: var(--color-bg);
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .insights-toggle:hover {
+      background: #f0ede8;
+    }
+    .insights-toggle-icon {
+      transition: transform 0.2s;
+      font-size: 9px;
+      color: var(--color-text-muted);
+    }
+    .insights-toggle.expanded .insights-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* 지도 — 인사이트 패널 높이만큼 줄임 */
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px - 130px);
+    }
+
+    .marker-completed,
+    .marker-construction {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.3px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid white;
+      cursor: pointer;
+    }
+    .marker-completed { background: var(--color-primary); }
+    .marker-construction { background: var(--color-accent); }
+    .marker-completed,
+    .marker-construction {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .marker-completed:hover,
+    .marker-construction:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 24px;
+      left: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      font-size: 12px;
+      max-width: 240px;
+      overflow: hidden;
+    }
+    .legend-header {
+      padding: 10px 14px;
+      background: var(--color-bg);
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .legend-header:hover {
+      background: #f0ede8;
+    }
+    .legend-title-text {
+      font-weight: 700;
+      color: var(--color-text-primary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .legend-toggle {
+      color: var(--color-text-muted);
+      font-size: 10px;
+      transition: transform 0.2s;
+      display: none;
+    }
+    .legend-content {
+      padding: 12px 14px 14px;
+      max-height: 400px;
+      overflow-y: auto;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+    }
+    .legend-section { margin-bottom: 10px; }
+    .legend-section:last-child { margin-bottom: 0; }
+    .legend-section-title {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 0;
+      font-size: 11px;
+      color: var(--color-text-primary);
+    }
+    .legend-marker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+    .legend-marker.completed { background: var(--color-primary); }
+    .legend-marker.construction { background: var(--color-accent); }
+
+    .disclaimer {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      font-size: 11px;
+      max-width: 280px;
+      overflow: hidden;
+    }
+    .disclaimer-header {
+      padding: 10px 14px;
+      background: var(--color-bg);
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .disclaimer-header:hover { background: #f0ede8; }
+    .disclaimer-title {
+      font-weight: 700;
+      color: var(--color-text-primary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .disclaimer-toggle {
+      color: var(--color-text-muted);
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+    .disclaimer.expanded .disclaimer-toggle {
+      transform: rotate(180deg);
+    }
+    .disclaimer-content {
+      padding: 0 14px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    .disclaimer.expanded .disclaimer-content {
+      padding: 12px 14px 14px;
+      max-height: 400px;
+    }
+    .disclaimer-section { margin-bottom: 10px; }
+    .disclaimer-section:last-child { margin-bottom: 0; }
+    .disclaimer-section-title {
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 3px;
+      font-size: 10.5px;
+    }
+    .disclaimer-section-content {
+      font-size: 10.5px;
+      color: var(--color-text-secondary);
+    }
+    .disclaimer-warning {
+      padding: 8px 10px;
+      background: var(--color-warm-bg);
+      border-left: 2px solid var(--color-warm-border);
+      border-radius: 3px;
+      color: var(--color-warm-text);
+      font-size: 10.5px;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+    .disclaimer-warning-icon {
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .leaflet-popup-content-wrapper { max-width: 580px; }
+    .leaflet-popup-content {
+      margin: 14px 18px;
+      width: auto !important;
+      min-width: 280px;
+    }
+    .popup-tower-name {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+    .popup-tower-meta {
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+    .popup-yield-note {
+      margin: 0 0 10px 0;
+      padding: 6px 10px;
+      background: var(--color-warm-bg-light);
+      border-left: 2px solid var(--color-warm-border);
+      border-radius: 3px;
+      font-size: 10.5px;
+      color: var(--color-warm-text);
+      line-height: 1.4;
+    }
+    .popup-yield-note-icon {
+      display: inline-block;
+      margin-right: 4px;
+    }
+    .popup-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+    }
+    .popup-table th,
+    .popup-table td {
+      padding: 4px 8px;
+      text-align: right;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+    .popup-table th {
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      text-align: center;
+      position: relative;
+    }
+    .popup-table td:first-child,
+    .popup-table th:first-child,
+    .popup-table td:nth-child(2),
+    .popup-table th:nth-child(2) {
+      text-align: left;
+    }
+
+    /* NULL 표시 — 의미 있는 텍스트 스타일 */
+    .empty-listing {
+      color: var(--color-text-faint);
+      font-style: italic;
+      font-size: 10.5px;
+    }
+    .empty-original {
+      color: var(--color-original-null);
+      font-style: italic;
+      font-size: 10.5px;
+    }
+
+    .col-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      height: 12px;
+      margin-left: 3px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: help;
+      font-style: normal;
+      position: relative;
+      vertical-align: middle;
+    }
+    .col-info:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 6px;
+      padding: 6px 10px;
+      background: #333;
+      color: white;
+      font-size: 10.5px;
+      font-weight: normal;
+      white-space: nowrap;
+      border-radius: 4px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .col-info:hover::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 2px;
+      border: 4px solid transparent;
+      border-top-color: var(--color-text-primary);
+      z-index: 1000;
+    }
+    .pct-positive { color: var(--color-success); font-weight: 600; }
+    .pct-negative { color: var(--color-danger); font-weight: 600; }
+    .pct-null { color: var(--color-text-faint); }
+    .yield-high { color: var(--color-success-deep); font-weight: 700; }
+    .yield-mid { color: var(--color-success); font-weight: 600; }
+    .yield-low { color: var(--color-text-muted); }
+    .popup-no-data {
+      margin: 12px 0 4px;
+      padding: 14px 16px;
+      background: var(--color-warm-bg);
+      border-left: 3px solid var(--color-warm-border);
+      border-radius: 4px;
+      color: var(--color-warm-text);
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+    .popup-no-data-icon {
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* ============================================
+       모바일 반응형 (768px 이하)
+       ============================================ */
+    @media (max-width: 768px) {
+      /* 헤더 — 두 줄 레이아웃 */
+      header {
+        padding: 10px 16px;
+        gap: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      header h1 {
+        font-size: 16px;
+        order: 1;
+      }
+      .tabs {
+        order: 2;
+        align-self: stretch;
+      }
+      .tab-btn {
+        flex: 1;
+        text-align: center;
+      }
+      header .meta {
+        font-size: 10px;
+        order: 3;
+        opacity: 0.75;
+        white-space: normal;
+      }
+
+      /* 지도 — 헤더 + 인사이트 패널 높이 변경 반영 */
+      #map {
+        height: calc(100vh - 110px - 240px);
+      }
+
+      /* 인사이트 패널 — 모바일에서 세로 배치 */
+      .insights-row {
+        flex-direction: column;
+      }
+
+      /* 모바일 — 토글 버튼 표시 */
+      .insights-toggle {
+        display: flex;
+      }
+
+      /* 모바일 — TOP 영역 기본 접힘 */
+      #insights-toplist {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      #insights-toplist.expanded {
+        max-height: 500px;
+      }
+
+      /* 모바일 — 지도 높이 재계산 (토글 닫힌 기준) */
+      #map {
+        height: calc(100vh - 110px - 130px);
+      }
+      .insights-segment {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 8px 14px;
+      }
+      .insights-segment:last-child {
+        border-bottom: none;
+      }
+      .seg-label {
+        font-size: 9.5px;
+      }
+      .metric-label {
+        font-size: 10px;
+      }
+      .metric-value {
+        font-size: 13px;
+      }
+      .top-title {
+        font-size: 9.5px;
+      }
+      .top-row {
+        font-size: 10px;
+      }
+
+      /* 범례 — 모바일에서는 접고 펼치는 형태 */
+      .legend {
+        bottom: 16px;
+        left: 12px;
+        max-width: 160px;
+        font-size: 10.5px;
+      }
+      .legend-toggle {
+        display: inline;
+      }
+      .legend-header {
+        padding: 8px 12px;
+      }
+      .legend-title-text {
+        font-size: 10px;
+      }
+      .legend-content {
+        max-height: 0;
+        padding: 0 12px;
+        overflow: hidden;
+      }
+      .legend.expanded .legend-content {
+        max-height: 50vh;
+        padding: 10px 12px 12px;
+        overflow-y: auto;
+      }
+      .legend.expanded .legend-toggle {
+        transform: rotate(180deg);
+      }
+      .legend-item {
+        font-size: 10px;
+        gap: 6px;
+      }
+      .legend-marker {
+        width: 18px;
+        height: 18px;
+        font-size: 8px;
+      }
+
+      /* 면책 — 모바일에서는 우측 하단에 작게 */
+      .disclaimer {
+        bottom: 16px;
+        right: 12px;
+        max-width: 180px;
+        font-size: 10px;
+      }
+      .disclaimer-header {
+        padding: 8px 12px;
+      }
+      .disclaimer-title {
+        font-size: 9.5px;
+      }
+      .disclaimer.expanded .disclaimer-content {
+        padding: 10px 12px 12px;
+        max-height: 50vh;
+        overflow-y: auto;
+      }
+      .disclaimer-section-title,
+      .disclaimer-section-content,
+      .disclaimer-warning {
+        font-size: 9.5px;
+      }
+
+      /* 팝업 — 모바일 화면에 맞게 좁힘 */
+      .leaflet-popup-content-wrapper {
+        max-width: 90vw;
+      }
+      .leaflet-popup-content {
+        margin: 10px 12px;
+        min-width: 240px;
+        max-width: 88vw;
+      }
+      .popup-tower-name {
+        font-size: 14px;
+      }
+      .popup-tower-meta {
+        font-size: 11px;
+      }
+
+      /* 팝업 테이블 — 가로 스크롤 허용 */
+      .popup-table {
+        font-size: 10px;
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+        white-space: nowrap;
+      }
+      .popup-table th,
+      .popup-table td {
+        padding: 3px 6px;
+      }
+      .popup-yield-note {
+        font-size: 9.5px;
+        padding: 5px 8px;
+      }
+
+      /* 마커 — 터치 타겟 확대 */
+      .marker-completed,
+      .marker-construction {
+        width: 38px;
+        height: 38px;
+        font-size: 12px;
+      }
+    }
+
+    /* ============================================
+       작은 모바일 (480px 이하)
+       ============================================ */
+    @media (max-width: 480px) {
+      /* 범례 + 면책 — 가로로 나란히 배치하지 말고 한쪽만 표시 */
+      .legend {
+        max-width: 130px;
+        font-size: 9.5px;
+      }
+      .disclaimer {
+        max-width: 140px;
+      }
+      .disclaimer.expanded {
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Ward Village 시세맵</h1>
+    <div class="tabs">
+      <button class="tab-btn active" data-mode="appreciation">상승률</button>
+      <button class="tab-btn" data-mode="yield">임대수익률</button>
+    </div>
+    <div class="meta">{{ total_towers }}개 콘도 · {{ total_units }}개 매물 · {{ build_timestamp[:10] }}</div>
+  </header>
+
+  <!-- 인사이트 패널 -->
+  {% set s = stats %}
+  <div class="insights-panel">
+    <!-- 영역 1: 시장 요약 (전체 vs 럭셔리) -->
+    <div class="insights-row insights-summary">
+      <div class="insights-segment">
+        <div class="seg-label">전체 시장 <span class="seg-count">({{ s.overall.listed_units }}/{{ s.overall.total_units }})</span></div>
+        <div class="seg-metrics">
+          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.overall.avg_appreciation_pct) }}%</span></span>
+          <span class="metric-sep">·</span>
+          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.overall.avg_yield_pct) }}%</span></span>
+        </div>
+      </div>
+      <div class="insights-segment insights-luxury">
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">({{ s.luxury.listed_units }}/{{ s.luxury.total_units }})</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-metrics">
+          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.luxury.avg_appreciation_pct) }}%</span></span>
+          <span class="metric-sep">·</span>
+          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.luxury.avg_yield_pct) }}%</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 영역 2 토글 버튼 (모바일에서만 표시) -->
+    <div class="insights-toggle" id="insights-toggle">
+      <span class="insights-toggle-label">상세 인사이트 보기</span>
+      <span class="insights-toggle-icon">▼</span>
+    </div>
+
+    <!-- 영역 2: TOP 매물 -->
+    <div class="insights-row insights-toplist" id="insights-toplist">
+      <div class="insights-segment">
+        <div class="top-title">🏆 자본 차익 TOP</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">{{ s.overall.top_appreciation.building_name }} {{ s.overall.top_appreciation.unit_type }} {{ s.overall.top_appreciation.unit_no }}</span>
+          <span class="top-value positive">{{ "%+.1f"|format(s.overall.top_appreciation.value) }}%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">{{ s.luxury.top_appreciation.building_name }} {{ s.luxury.top_appreciation.unit_type }} {{ s.luxury.top_appreciation.unit_no }}</span>
+          <span class="top-value positive">{{ "%+.1f"|format(s.luxury.top_appreciation.value) }}%</span>
+        </div>
+      </div>
+
+      <div class="insights-segment">
+        <div class="top-title">💰 임대 수익률 TOP</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">{{ s.overall.top_yield.building_name }} {{ s.overall.top_yield.unit_type }} {{ s.overall.top_yield.unit_no }}</span>
+          <span class="top-value yield">{{ "%.2f"|format(s.overall.top_yield.value) }}%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">{{ s.luxury.top_yield.building_name }} {{ s.luxury.top_yield.unit_type }} {{ s.luxury.top_yield.unit_no }}</span>
+          <span class="top-value yield">{{ "%.2f"|format(s.luxury.top_yield.value) }}%</span>
+        </div>
+      </div>
+
+      <div class="insights-segment">
+        <div class="top-title">📉 자본 차익 BOTTOM</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">{{ s.overall.bottom_appreciation.building_name }} {{ s.overall.bottom_appreciation.unit_type }} {{ s.overall.bottom_appreciation.unit_no }}</span>
+          <span class="top-value negative">{{ "%+.1f"|format(s.overall.bottom_appreciation.value) }}%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">{{ s.luxury.bottom_appreciation.building_name }} {{ s.luxury.bottom_appreciation.unit_type }} {{ s.luxury.bottom_appreciation.unit_no }}</span>
+          <span class="top-value negative">{{ "%+.1f"|format(s.luxury.bottom_appreciation.value) }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend" id="legend">
+    <div class="legend-header" id="legend-header">
+      <span class="legend-title-text">콘도 약자 안내</span>
+      <span class="legend-toggle">▼</span>
+    </div>
+    <div class="legend-content">
+
+    {% set completed = towers | selectattr("status", "equalto", "completed") | list %}
+    {% set construction = towers | selectattr("status", "equalto", "under_construction") | list %}
+
+    <div class="legend-section">
+      <div class="legend-section-title">완공 ({{ completed | length }})</div>
+      {% for t in completed | sort(attribute="year_completed") %}
+      <div class="legend-item">
+        <span class="legend-marker completed">{{ tower_abbr[t.building_name] }}</span>
+        {{ t.building_name }} ({{ t.year_completed }})
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="legend-section">
+      <div class="legend-section-title">완공 예정 ({{ construction | length }})</div>
+      {% for t in construction | sort(attribute="year_completed") %}
+      <div class="legend-item">
+        <span class="legend-marker construction">{{ tower_abbr[t.building_name] }}</span>
+        {{ t.building_name }} ({{ t.year_completed }})
+      </div>
+      {% endfor %}
+    </div>
+
+    </div>
+  </div>
+
+  <div class="disclaimer" id="disclaimer">
+    <div class="disclaimer-header" id="disclaimer-header">
+      <span class="disclaimer-title">데이터 정보 · 면책</span>
+      <span class="disclaimer-toggle">▼</span>
+    </div>
+    <div class="disclaimer-content">
+      <div class="disclaimer-section">
+        <div class="disclaimer-section-title">데이터 출처</div>
+        <div class="disclaimer-section-content">
+          분양가: 호놀룰루시 공식 등기 정보 (Honolulu Real Property)<br>
+          매물가: Zillow, Hawaii Life 등 공개 매물 정보<br>
+          임대료: Zillow Rent Estimate 등 시장 추정치<br>
+          좌표: Howard Hughes 공식 지도 기반 매핑
+        </div>
+      </div>
+
+      <div class="disclaimer-section">
+        <div class="disclaimer-section-title">업데이트</div>
+        <div class="disclaimer-section-content">
+          마지막 데이터 갱신: {{ build_timestamp[:10] }}<br>
+          매주 주기적 업데이트 예정
+        </div>
+      </div>
+
+      <div class="disclaimer-warning">
+        <span class="disclaimer-warning-icon">⚠</span>
+        본 시세맵은 비공식 자료로 <strong>투자 참고용</strong>입니다. 
+        실거래 시 반드시 공식 매물 정보 및 전문가 자문을 받으시기 바랍니다. 
+        임대료는 시장 추정치이며 실거래와 다를 수 있습니다.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const towersData = {{ towers_json | safe }};
+
+    const TOWER_ABBR = {
+      "Waiea": "Wa", "Anaha": "An", "Ae'o": "Ae", "Ke Kilohana": "Ke",
+      "'A'ali'i": "Aa", "Ko'ula": "Ko", "Victoria Place": "VP", "Ulana": "Ul",
+      "The Park Ward Village": "Pa", "Kalae": "Ka", "The Launiu": "La",
+      "'Ilima": "Il", "Melia": "Me"
+    };
+
+    let currentMode = "appreciation";
+    const markerMap = {};
+
+    const map = L.map("map").setView([21.2950, -157.8540], 16);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19
+    }).addTo(map);
+
+    function fmtMoney(v) {
+      if (v === null || v === undefined) return "-";
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    // 매물가 전용 — NULL이면 "매물 없음" 표시
+    function fmtListPrice(v) {
+      if (v === null || v === undefined) {
+        return '<span class="empty-listing">매물 없음</span>';
+      }
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    // 분양가 전용 — NULL이면 "등기 미반영" 표시
+    function fmtOriginalPrice(v) {
+      if (v === null || v === undefined) {
+        return '<span class="empty-original">등기 미반영</span>';
+      }
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    function fmtPct(v) {
+      if (v === null || v === undefined) return '<span class="pct-null">-</span>';
+      const sign = v >= 0 ? "+" : "";
+      const cls = v >= 0 ? "pct-positive" : "pct-negative";
+      return `<span class="${cls}">${sign}${v.toFixed(1)}%</span>`;
+    }
+
+    function fmtYield(v) {
+      if (v === null || v === undefined) return '<span class="pct-null">-</span>';
+      let cls = "yield-low";
+      if (v >= 5) cls = "yield-high";
+      else if (v >= 3) cls = "yield-mid";
+      return `<span class="${cls}">${v.toFixed(2)}%</span>`;
+    }
+
+    function fmtInt(v) {
+      if (v === null || v === undefined) return "-";
+      return v.toLocaleString();
+    }
+
+    function buildPopup(tower, mode) {
+      const statusLabel = tower.status === "completed" ? "완공" : "완공 예정";
+
+      if (!tower.units || tower.units.length === 0) {
+        return `
+          <h3 class="popup-tower-name">${tower.building_name}</h3>
+          <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel}</p>
+          <div class="popup-no-data">
+            <span class="popup-no-data-icon">📋</span>
+            아직 매물 정보가 등록되지 않았습니다.
+          </div>
+        `;
+      }
+
+      let headerCells, bodyRows, noteHTML = "";
+
+      if (mode === "appreciation") {
+        headerCells = `
+          <th>Type</th><th>호수</th><th>면적</th>
+          <th>분양가</th><th>매물가</th><th>상승률</th>
+        `;
+        bodyRows = tower.units.map(u => `
+          <tr>
+            <td>${u.unit_type}</td>
+            <td>${u.unit_no || "-"}</td>
+            <td>${fmtInt(u.living_sqft)}</td>
+            <td>${fmtOriginalPrice(u.original_price)}</td>
+            <td>${fmtListPrice(u.current_list_price)}</td>
+            <td>${fmtPct(u.appreciation_pct)}</td>
+          </tr>
+        `).join("");
+      } else {
+        noteHTML = `
+          <div class="popup-yield-note">
+            <span class="popup-yield-note-icon">ⓘ</span>
+            임대료는 시장 추정치이며, 실제 임대 수익은 호수, 시기, 임차 조건에 따라 달라질 수 있습니다.
+          </div>
+        `;
+        headerCells = `
+          <th>Type</th><th>호수</th><th>면적</th>
+          <th>매물가</th>
+          <th>임대료/월<i class="col-info" data-tooltip="시장 추정치 (실거래 X)">i</i></th>
+          <th>수익률</th>
+        `;
+        bodyRows = tower.units.map(u => `
+          <tr>
+            <td>${u.unit_type}</td>
+            <td>${u.unit_no || "-"}</td>
+            <td>${fmtInt(u.living_sqft)}</td>
+            <td>${fmtListPrice(u.current_list_price)}</td>
+            <td>${fmtMoney(u.est_rent_monthly)}</td>
+            <td>${fmtYield(u.rental_yield_pct)}</td>
+          </tr>
+        `).join("");
+      }
+
+      return `
+        <h3 class="popup-tower-name">${tower.building_name}</h3>
+        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        ${noteHTML}
+        <table class="popup-table">
+          <thead><tr>${headerCells}</tr></thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+      `;
+    }
+
+    towersData.forEach(tower => {
+      const cssClass = tower.status === "completed" ? "marker-completed" : "marker-construction";
+      const abbr = TOWER_ABBR[tower.building_name] || "??";
+
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="${cssClass}">${abbr}</div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+
+      const marker = L.marker([tower.latitude, tower.longitude], { icon: icon })
+        .addTo(map)
+        .bindPopup(buildPopup(tower, currentMode), { maxWidth: 580, minWidth: 280 });
+
+      markerMap[tower.building_name] = marker;
+    });
+
+    function switchMode(newMode) {
+      if (currentMode === newMode) return;
+      currentMode = newMode;
+      towersData.forEach(tower => {
+        const marker = markerMap[tower.building_name];
+        marker.setPopupContent(buildPopup(tower, currentMode));
+      });
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === currentMode);
+      });
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchMode(btn.dataset.mode));
+    });
+
+    document.getElementById("disclaimer-header").addEventListener("click", () => {
+      document.getElementById("disclaimer").classList.toggle("expanded");
+    });
+
+    // 범례 토글 (모바일에서만 의미 있음)
+    document.getElementById("legend-header").addEventListener("click", () => {
+      document.getElementById("legend").classList.toggle("expanded");
+    });
+
+    // 인사이트 패널 상세 토글 (모바일에서만 의미 있음)
+    document.getElementById("insights-toggle").addEventListener("click", () => {
+      document.getElementById("insights-toggle").classList.toggle("expanded");
+      document.getElementById("insights-toplist").classList.toggle("expanded");
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

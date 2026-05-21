@@ -1,0 +1,38 @@
+﻿# Secrets - 절대 Git에 올리지 않을 파일
+.env
+.env.local
+.env.*.local
+
+# Python 가상환경
+.venv/
+venv/
+env/
+
+# Python 캐시 파일
+__pycache__/
+*.pyc
+*.pyo
+
+# Python 빌드 관련
+*.egg-info/
+dist/
+build/
+
+# IDE / 에디터 설정
+.vscode/
+.idea/
+*.swp
+
+# OS 시스템 파일
+.DS_Store
+Thumbs.db
+
+# 임시 분석 스크립트
+check_*.py
+
+# Day 1-2 학습용 테스트 파일 (Supabase 연결/쿼리 학습)
+test_connection.py
+test_query.py
+test_units.py
+debug_query.py
+

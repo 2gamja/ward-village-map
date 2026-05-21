@@ -1,0 +1,1168 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ward Village 시세맵</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    :root {
+      /* 색상 토큰 */
+      --color-primary: #9B1C2E;
+      --color-accent: #C99A6B;
+      --color-bg: #fafaf7;
+      --color-text-primary: #333;
+      --color-text-secondary: #555;
+      --color-text-muted: #888;
+      --color-text-faint: #aaa;
+      --color-success: #2E7D32;
+      --color-success-deep: #1B5E20;
+      --color-danger: #C62828;
+      --color-warm-bg: #FAF4E8;
+      --color-warm-bg-light: #F5EFE3;
+      --color-warm-border: #C99A6B;
+      --color-warm-text: #6B4F2A;
+      --color-original-null: #9C7C4D;
+
+      /* 간격 토큰 (8-point grid) */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 14px;
+      --space-lg: 24px;
+
+      /* 그림자 */
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 2px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--color-bg);
+      line-height: 1.5;
+      color: var(--color-text-primary);
+    }
+    header {
+      background: var(--color-primary);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    header .meta {
+      font-size: 11px;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 3px;
+      border-radius: 6px;
+    }
+    .tab-btn {
+      padding: 6px 14px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .tab-btn:hover { color: white; }
+    .tab-btn.active {
+      background: white;
+      color: var(--color-primary);
+    }
+
+    /* 인사이트 패널 */
+    .insights-panel {
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    .insights-row {
+      display: flex;
+      align-items: stretch;
+    }
+    .insights-summary {
+      border-bottom: 1px solid #eee;
+    }
+    .insights-segment {
+      flex: 1;
+      padding: 10px 18px;
+      border-right: 1px solid #eee;
+      min-width: 0;
+    }
+    .insights-segment:last-child {
+      border-right: none;
+    }
+    .insights-luxury {
+      background: var(--color-warm-bg);
+    }
+
+    /* 시장 요약 영역 */
+    .seg-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .seg-count {
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .seg-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: help;
+    }
+    .seg-metrics {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .metric {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+    .metric-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+    .metric-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .metric-sep {
+      color: var(--color-text-faint);
+    }
+
+    /* TOP 매물 영역 */
+    .top-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding: 1px 0;
+    }
+    .top-scope {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: var(--color-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .top-unit {
+      color: var(--color-text-primary);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .top-value {
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .top-value.positive { color: var(--color-success); }
+    .top-value.negative { color: var(--color-danger); }
+    .top-value.yield { color: var(--color-success-deep); }
+
+    /* 모바일 토글 버튼 — 데스크탑에서는 숨김 */
+    .insights-toggle {
+      display: none;
+      padding: 8px 14px;
+      background: var(--color-bg);
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .insights-toggle:hover {
+      background: #f0ede8;
+    }
+    .insights-toggle-icon {
+      transition: transform 0.2s;
+      font-size: 9px;
+      color: var(--color-text-muted);
+    }
+    .insights-toggle.expanded .insights-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* 지도 — 인사이트 패널 높이만큼 줄임 */
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px - 130px);
+    }
+
+    .marker-completed,
+    .marker-construction {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: -0.3px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid white;
+      cursor: pointer;
+    }
+    .marker-completed { background: var(--color-primary); }
+    .marker-construction { background: var(--color-accent); }
+    .marker-completed,
+    .marker-construction {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .marker-completed:hover,
+    .marker-construction:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 24px;
+      left: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      font-size: 12px;
+      max-width: 240px;
+      overflow: hidden;
+    }
+    .legend-header {
+      padding: 10px 14px;
+      background: var(--color-bg);
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .legend-header:hover {
+      background: #f0ede8;
+    }
+    .legend-title-text {
+      font-weight: 700;
+      color: var(--color-text-primary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .legend-toggle {
+      color: var(--color-text-muted);
+      font-size: 10px;
+      transition: transform 0.2s;
+      display: none;
+    }
+    .legend-content {
+      padding: 12px 14px 14px;
+      max-height: 400px;
+      overflow-y: auto;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+    }
+    .legend-section { margin-bottom: 10px; }
+    .legend-section:last-child { margin-bottom: 0; }
+    .legend-section-title {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 0;
+      font-size: 11px;
+      color: var(--color-text-primary);
+    }
+    .legend-marker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+    .legend-marker.completed { background: var(--color-primary); }
+    .legend-marker.construction { background: var(--color-accent); }
+
+    .disclaimer {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      font-size: 11px;
+      max-width: 280px;
+      overflow: hidden;
+    }
+    .disclaimer-header {
+      padding: 10px 14px;
+      background: var(--color-bg);
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .disclaimer-header:hover { background: #f0ede8; }
+    .disclaimer-title {
+      font-weight: 700;
+      color: var(--color-text-primary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .disclaimer-toggle {
+      color: var(--color-text-muted);
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+    .disclaimer.expanded .disclaimer-toggle {
+      transform: rotate(180deg);
+    }
+    .disclaimer-content {
+      padding: 0 14px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    .disclaimer.expanded .disclaimer-content {
+      padding: 12px 14px 14px;
+      max-height: 400px;
+    }
+    .disclaimer-section { margin-bottom: 10px; }
+    .disclaimer-section:last-child { margin-bottom: 0; }
+    .disclaimer-section-title {
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 3px;
+      font-size: 10.5px;
+    }
+    .disclaimer-section-content {
+      font-size: 10.5px;
+      color: var(--color-text-secondary);
+    }
+    .disclaimer-warning {
+      padding: 8px 10px;
+      background: var(--color-warm-bg);
+      border-left: 2px solid var(--color-warm-border);
+      border-radius: 3px;
+      color: var(--color-warm-text);
+      font-size: 10.5px;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+    .disclaimer-warning-icon {
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .leaflet-popup-content-wrapper { max-width: 580px; }
+    .leaflet-popup-content {
+      margin: 14px 18px;
+      width: auto !important;
+      min-width: 280px;
+    }
+    .popup-tower-name {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+    .popup-tower-meta {
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+    .popup-yield-note {
+      margin: 0 0 10px 0;
+      padding: 6px 10px;
+      background: var(--color-warm-bg-light);
+      border-left: 2px solid var(--color-warm-border);
+      border-radius: 3px;
+      font-size: 10.5px;
+      color: var(--color-warm-text);
+      line-height: 1.4;
+    }
+    .popup-yield-note-icon {
+      display: inline-block;
+      margin-right: 4px;
+    }
+    .popup-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+    }
+    .popup-table th,
+    .popup-table td {
+      padding: 4px 8px;
+      text-align: right;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+    .popup-table th {
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      text-align: center;
+      position: relative;
+    }
+    .popup-table td:first-child,
+    .popup-table th:first-child,
+    .popup-table td:nth-child(2),
+    .popup-table th:nth-child(2) {
+      text-align: left;
+    }
+
+    /* NULL 표시 — 의미 있는 텍스트 스타일 */
+    .empty-listing {
+      color: var(--color-text-faint);
+      font-style: italic;
+      font-size: 10.5px;
+    }
+    .empty-original {
+      color: var(--color-original-null);
+      font-style: italic;
+      font-size: 10.5px;
+    }
+
+    .col-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      height: 12px;
+      margin-left: 3px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: help;
+      font-style: normal;
+      position: relative;
+      vertical-align: middle;
+    }
+    .col-info:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 6px;
+      padding: 6px 10px;
+      background: #333;
+      color: white;
+      font-size: 10.5px;
+      font-weight: normal;
+      white-space: nowrap;
+      border-radius: 4px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .col-info:hover::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 2px;
+      border: 4px solid transparent;
+      border-top-color: var(--color-text-primary);
+      z-index: 1000;
+    }
+    .pct-positive { color: var(--color-success); font-weight: 600; }
+    .pct-negative { color: var(--color-danger); font-weight: 600; }
+    .pct-null { color: var(--color-text-faint); }
+    .yield-high { color: var(--color-success-deep); font-weight: 700; }
+    .yield-mid { color: var(--color-success); font-weight: 600; }
+    .yield-low { color: var(--color-text-muted); }
+    .popup-no-data {
+      margin: 12px 0 4px;
+      padding: 14px 16px;
+      background: var(--color-warm-bg);
+      border-left: 3px solid var(--color-warm-border);
+      border-radius: 4px;
+      color: var(--color-warm-text);
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+    .popup-no-data-icon {
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* ============================================
+       모바일 반응형 (768px 이하)
+       ============================================ */
+    @media (max-width: 768px) {
+      /* 헤더 — 두 줄 레이아웃 */
+      header {
+        padding: 10px 16px;
+        gap: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      header h1 {
+        font-size: 16px;
+        order: 1;
+      }
+      .tabs {
+        order: 2;
+        align-self: stretch;
+      }
+      .tab-btn {
+        flex: 1;
+        text-align: center;
+      }
+      header .meta {
+        font-size: 10px;
+        order: 3;
+        opacity: 0.75;
+        white-space: normal;
+      }
+
+      /* 지도 — 헤더 + 인사이트 패널 높이 변경 반영 */
+      #map {
+        height: calc(100vh - 110px - 240px);
+      }
+
+      /* 인사이트 패널 — 모바일에서 세로 배치 */
+      .insights-row {
+        flex-direction: column;
+      }
+
+      /* 모바일 — 토글 버튼 표시 */
+      .insights-toggle {
+        display: flex;
+      }
+
+      /* 모바일 — TOP 영역 기본 접힘 */
+      #insights-toplist {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      #insights-toplist.expanded {
+        max-height: 500px;
+      }
+
+      /* 모바일 — 지도 높이 재계산 (토글 닫힌 기준) */
+      #map {
+        height: calc(100vh - 110px - 130px);
+      }
+      .insights-segment {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 8px 14px;
+      }
+      .insights-segment:last-child {
+        border-bottom: none;
+      }
+      .seg-label {
+        font-size: 9.5px;
+      }
+      .metric-label {
+        font-size: 10px;
+      }
+      .metric-value {
+        font-size: 13px;
+      }
+      .top-title {
+        font-size: 9.5px;
+      }
+      .top-row {
+        font-size: 10px;
+      }
+
+      /* 범례 — 모바일에서는 접고 펼치는 형태 */
+      .legend {
+        bottom: 16px;
+        left: 12px;
+        max-width: 160px;
+        font-size: 10.5px;
+      }
+      .legend-toggle {
+        display: inline;
+      }
+      .legend-header {
+        padding: 8px 12px;
+      }
+      .legend-title-text {
+        font-size: 10px;
+      }
+      .legend-content {
+        max-height: 0;
+        padding: 0 12px;
+        overflow: hidden;
+      }
+      .legend.expanded .legend-content {
+        max-height: 50vh;
+        padding: 10px 12px 12px;
+        overflow-y: auto;
+      }
+      .legend.expanded .legend-toggle {
+        transform: rotate(180deg);
+      }
+      .legend-item {
+        font-size: 10px;
+        gap: 6px;
+      }
+      .legend-marker {
+        width: 18px;
+        height: 18px;
+        font-size: 8px;
+      }
+
+      /* 면책 — 모바일에서는 우측 하단에 작게 */
+      .disclaimer {
+        bottom: 16px;
+        right: 12px;
+        max-width: 180px;
+        font-size: 10px;
+      }
+      .disclaimer-header {
+        padding: 8px 12px;
+      }
+      .disclaimer-title {
+        font-size: 9.5px;
+      }
+      .disclaimer.expanded .disclaimer-content {
+        padding: 10px 12px 12px;
+        max-height: 50vh;
+        overflow-y: auto;
+      }
+      .disclaimer-section-title,
+      .disclaimer-section-content,
+      .disclaimer-warning {
+        font-size: 9.5px;
+      }
+
+      /* 팝업 — 모바일 화면에 맞게 좁힘 */
+      .leaflet-popup-content-wrapper {
+        max-width: 90vw;
+      }
+      .leaflet-popup-content {
+        margin: 10px 12px;
+        min-width: 240px;
+        max-width: 88vw;
+      }
+      .popup-tower-name {
+        font-size: 14px;
+      }
+      .popup-tower-meta {
+        font-size: 11px;
+      }
+
+      /* 팝업 테이블 — 가로 스크롤 허용 */
+      .popup-table {
+        font-size: 10px;
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+        white-space: nowrap;
+      }
+      .popup-table th,
+      .popup-table td {
+        padding: 3px 6px;
+      }
+      .popup-yield-note {
+        font-size: 9.5px;
+        padding: 5px 8px;
+      }
+
+      /* 마커 — 터치 타겟 확대 */
+      .marker-completed,
+      .marker-construction {
+        width: 38px;
+        height: 38px;
+        font-size: 12px;
+      }
+    }
+
+    /* ============================================
+       작은 모바일 (480px 이하)
+       ============================================ */
+    @media (max-width: 480px) {
+      /* 범례 + 면책 — 가로로 나란히 배치하지 말고 한쪽만 표시 */
+      .legend {
+        max-width: 130px;
+        font-size: 9.5px;
+      }
+      .disclaimer {
+        max-width: 140px;
+      }
+      .disclaimer.expanded {
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Ward Village 시세맵</h1>
+    <div class="tabs">
+      <button class="tab-btn active" data-mode="appreciation">상승률</button>
+      <button class="tab-btn" data-mode="yield">임대수익률</button>
+    </div>
+    <div class="meta">13개 콘도 · 58개 매물 · 2026-05-21</div>
+  </header>
+
+  <!-- 인사이트 패널 -->
+  
+  <div class="insights-panel">
+    <!-- 영역 1: 시장 요약 (전체 vs 럭셔리) -->
+    <div class="insights-row insights-summary">
+      <div class="insights-segment">
+        <div class="seg-label">전체 시장 <span class="seg-count">(45/58)</span></div>
+        <div class="seg-metrics">
+          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">+15.2%</span></span>
+          <span class="metric-sep">·</span>
+          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">3.71%</span></span>
+        </div>
+      </div>
+      <div class="insights-segment insights-luxury">
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">(10/13)</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-metrics">
+          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">+20.1%</span></span>
+          <span class="metric-sep">·</span>
+          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">1.69%</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 영역 2 토글 버튼 (모바일에서만 표시) -->
+    <div class="insights-toggle" id="insights-toggle">
+      <span class="insights-toggle-label">상세 인사이트 보기</span>
+      <span class="insights-toggle-icon">▼</span>
+    </div>
+
+    <!-- 영역 2: TOP 매물 -->
+    <div class="insights-row insights-toplist" id="insights-toplist">
+      <div class="insights-segment">
+        <div class="top-title">🏆 자본 차익 TOP</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">Anaha 1BR 507</span>
+          <span class="top-value positive">+56.1%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">Ko'ula 3BR 2100</span>
+          <span class="top-value positive">+41.6%</span>
+        </div>
+      </div>
+
+      <div class="insights-segment">
+        <div class="top-title">💰 임대 수익률 TOP</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">Ke Kilohana 3BR 3507</span>
+          <span class="top-value yield">7.09%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">Anaha 3BR 3300</span>
+          <span class="top-value yield">3.34%</span>
+        </div>
+      </div>
+
+      <div class="insights-segment">
+        <div class="top-title">📉 자본 차익 BOTTOM</div>
+        <div class="top-row">
+          <span class="top-scope">전체</span>
+          <span class="top-unit">Anaha 3BR 3300</span>
+          <span class="top-value negative">-9.0%</span>
+        </div>
+        <div class="top-row">
+          <span class="top-scope">럭셔리</span>
+          <span class="top-unit">Anaha 3BR 3300</span>
+          <span class="top-value negative">-9.0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend" id="legend">
+    <div class="legend-header" id="legend-header">
+      <span class="legend-title-text">콘도 약자 안내</span>
+      <span class="legend-toggle">▼</span>
+    </div>
+    <div class="legend-content">
+
+    
+    
+
+    <div class="legend-section">
+      <div class="legend-section-title">완공 (9)</div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Wa</span>
+        Waiea (2016)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">An</span>
+        Anaha (2017)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Ae</span>
+        Ae'o (2018)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Ke</span>
+        Ke Kilohana (2019)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Aa</span>
+        'A'ali'i (2021)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Ko</span>
+        Ko'ula (2022)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">VP</span>
+        Victoria Place (2024)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Ul</span>
+        Ulana (2025)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker completed">Pa</span>
+        The Park Ward Village (2026)
+      </div>
+      
+    </div>
+
+    <div class="legend-section">
+      <div class="legend-section-title">완공 예정 (4)</div>
+      
+      <div class="legend-item">
+        <span class="legend-marker construction">Ka</span>
+        Kalae (2027)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker construction">La</span>
+        The Launiu (2028)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker construction">Il</span>
+        'Ilima (2030)
+      </div>
+      
+      <div class="legend-item">
+        <span class="legend-marker construction">Me</span>
+        Melia (2030)
+      </div>
+      
+    </div>
+
+    </div>
+  </div>
+
+  <div class="disclaimer" id="disclaimer">
+    <div class="disclaimer-header" id="disclaimer-header">
+      <span class="disclaimer-title">데이터 정보 · 면책</span>
+      <span class="disclaimer-toggle">▼</span>
+    </div>
+    <div class="disclaimer-content">
+      <div class="disclaimer-section">
+        <div class="disclaimer-section-title">데이터 출처</div>
+        <div class="disclaimer-section-content">
+          분양가: 호놀룰루시 공식 등기 정보 (Honolulu Real Property)<br>
+          매물가: Zillow, Hawaii Life 등 공개 매물 정보<br>
+          임대료: Zillow Rent Estimate 등 시장 추정치<br>
+          좌표: Howard Hughes 공식 지도 기반 매핑
+        </div>
+      </div>
+
+      <div class="disclaimer-section">
+        <div class="disclaimer-section-title">업데이트</div>
+        <div class="disclaimer-section-content">
+          마지막 데이터 갱신: 2026-05-21<br>
+          매주 주기적 업데이트 예정
+        </div>
+      </div>
+
+      <div class="disclaimer-warning">
+        <span class="disclaimer-warning-icon">⚠</span>
+        본 시세맵은 비공식 자료로 <strong>투자 참고용</strong>입니다. 
+        실거래 시 반드시 공식 매물 정보 및 전문가 자문을 받으시기 바랍니다. 
+        임대료는 시장 추정치이며 실거래와 다를 수 있습니다.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const towersData = [{"building_name": "Waiea", "year_completed": 2016, "status": "completed", "latitude": 21.293447, "longitude": -157.853738, "notes": "PT, Villa 포함 럭셔리 라인", "units": [{"id": 58, "notes": "임대수익 추정\r\n#903 26년 매매", "unit_no": "1203", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 2281.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-1203-Honolulu-HI-96814/123871804_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1139, "original_price": 1651000.0, "est_rent_monthly": 5533.0, "current_list_price": 1998000.0, "appreciation_pct": 21.02, "capital_gain": 347000.0, "price_per_sqft": 1754.17, "rental_yield_pct": 3.32}, {"id": 59, "notes": "26년 3월 가격인상\r\n#2003 25년 매매", "unit_no": "2903", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 2281.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-2903-Honolulu-HI-96814/123873347_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1139, "original_price": 1761000.0, "est_rent_monthly": 5533.0, "current_list_price": 2098000.0, "appreciation_pct": 19.14, "capital_gain": 337000.0, "price_per_sqft": 1841.97, "rental_yield_pct": 3.16}, {"id": 60, "notes": "#2505 25년 매매", "unit_no": "2905", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2898.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-2905-Honolulu-HI-96814/123871912_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1447, "original_price": 2466000.0, "est_rent_monthly": 6566.0, "current_list_price": 2999000.0, "appreciation_pct": 21.61, "capital_gain": 533000.0, "price_per_sqft": 2072.56, "rental_yield_pct": 2.63}, {"id": 61, "notes": "임대수익 추정", "unit_no": "3403", "unit_type": "2BR(2b3b)", "view_type": "Ocean", "hoa_monthly": 4100.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-3403-Honolulu-HI-96814/250089030_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 2077, "original_price": 4490000.0, "est_rent_monthly": 7477.0, "current_list_price": 6000000.0, "appreciation_pct": 33.63, "capital_gain": 1510000.0, "price_per_sqft": 2888.78, "rental_yield_pct": 1.5}, {"id": 62, "notes": "2023 -4.8%인하", "unit_no": "3102", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2428.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-3102-Honolulu-HI-96814/123871489_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1976, "original_price": 3975073.0, "est_rent_monthly": 7557.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 63, "notes": "임대수익 추정", "unit_no": "1000", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 5610.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-1000-Honolulu-HI-96814/123872172_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 2801, "original_price": 5802200.0, "est_rent_monthly": 6048.0, "current_list_price": 7100000.0, "appreciation_pct": 22.37, "capital_gain": 1297800.0, "price_per_sqft": 2534.81, "rental_yield_pct": 1.02}, {"id": 65, "notes": "#3301 24년 매매", "unit_no": "3401", "unit_type": "3BR(PT)", "view_type": "Ocean", "hoa_monthly": 5373.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-3401-Honolulu-HI-96814/250089029_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 3033, "original_price": 7850000.0, "est_rent_monthly": 7206.0, "current_list_price": 9900000.0, "appreciation_pct": 26.11, "capital_gain": 2050000.0, "price_per_sqft": 3264.09, "rental_yield_pct": 0.87}, {"id": 64, "notes": null, "unit_no": "3001", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 3656.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-3001-Honolulu-HI-96814/123872886_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 2377, "original_price": 5447000.0, "est_rent_monthly": 7779.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 66, "notes": "전용풀장, (260408) $7,500,000 -45.7% 으로 급 변경했다가 원복됨", "unit_no": "Villa 1", "unit_type": "Villa", "view_type": "Ocean", "hoa_monthly": 14113.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-1-Honolulu-HI-96814/123872612_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 7028, "original_price": 8961000.0, "est_rent_monthly": 6062.0, "current_list_price": 11895000.0, "appreciation_pct": 32.74, "capital_gain": 2934000.0, "price_per_sqft": 1692.52, "rental_yield_pct": 0.61}, {"id": 67, "notes": null, "unit_no": "3400", "unit_type": "PT", "view_type": "Ocean", "hoa_monthly": 7426.0, "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-APT-3400-Honolulu-HI-96814/250089028_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 4192, "original_price": 14500000.0, "est_rent_monthly": 9087.0, "current_list_price": 13500000.0, "appreciation_pct": -6.9, "capital_gain": -1000000.0, "price_per_sqft": 3220.42, "rental_yield_pct": 0.81}], "unit_count": 10}, {"building_name": "Anaha", "year_completed": 2017, "status": "completed", "latitude": 21.293687, "longitude": -157.852734, "notes": "PH 포함, 26년 실거래가 일부 반영", "units": [{"id": 68, "notes": "#202 25년 매매", "unit_no": "411", "unit_type": "Studio", "view_type": "City", "hoa_monthly": 698.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-411-Honolulu-HI-96814/123872768_zpid/", "living_sqft": 438, "original_price": 567000.0, "est_rent_monthly": 2528.0, "current_list_price": 680000.0, "appreciation_pct": 19.93, "capital_gain": 113000.0, "price_per_sqft": 1552.51, "rental_yield_pct": 4.46}, {"id": 69, "notes": null, "unit_no": "507", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 1270.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-507-Honolulu-HI-96814/123872950_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 806, "original_price": 672000.0, "est_rent_monthly": 4479.0, "current_list_price": 1049000.0, "appreciation_pct": 56.1, "capital_gain": 377000.0, "price_per_sqft": 1301.49, "rental_yield_pct": 5.12}, {"id": 70, "notes": null, "unit_no": "1305", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 1144.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-1305-Honolulu-HI-96814/123872431_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 726, "original_price": 590000.0, "est_rent_monthly": 3981.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 71, "notes": null, "unit_no": "2202", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2665.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-2202-Honolulu-HI-96814/123872752_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1691, "original_price": 2490000.0, "est_rent_monthly": 7743.0, "current_list_price": 2650000.0, "appreciation_pct": 6.43, "capital_gain": 160000.0, "price_per_sqft": 1567.12, "rental_yield_pct": 3.51}, {"id": 72, "notes": null, "unit_no": "3705", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2318.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-3705-Honolulu-HI-96814/123871447_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1354, "original_price": 2000000.0, "est_rent_monthly": 7173.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 73, "notes": null, "unit_no": "3300", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 3853.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-3300-Honolulu-HI-96814/123872673_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 2445, "original_price": 4064292.0, "est_rent_monthly": 10300.0, "current_list_price": 3700000.0, "appreciation_pct": -8.96, "capital_gain": -364292.0, "price_per_sqft": 1513.29, "rental_yield_pct": 3.34}, {"id": 74, "notes": null, "unit_no": "2900", "unit_type": "Tower 3BR", "view_type": "City/Ocean/DH", "hoa_monthly": 4881.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-2900-Honolulu-HI-96814/123872630_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 2492, "original_price": 3707000.0, "est_rent_monthly": 10789.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 75, "notes": "grand PH(5br) 최상층 2세대", "unit_no": "3800", "unit_type": "PH", "view_type": "360deg Ocean/DH", "hoa_monthly": 11229.0, "listing_url": "https://www.zillow.com/homedetails/1108-Auahi-St-APT-3800-Honolulu-HI-96814/123872544_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 6737, "original_price": 12800000.0, "est_rent_monthly": 33484.0, "current_list_price": 14500000.0, "appreciation_pct": 13.28, "capital_gain": 1700000.0, "price_per_sqft": 2152.29, "rental_yield_pct": 2.77}], "unit_count": 8}, {"building_name": "Ae'o", "year_completed": 2018, "status": "completed", "latitude": 21.295426, "longitude": -157.853085, "notes": "Whole Foods 상권 인접", "units": [{"id": 78, "notes": null, "unit_no": "2110", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 652.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-2110-Honolulu-HI-96814/145639005_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 407, "original_price": 537750.0, "est_rent_monthly": 2756.0, "current_list_price": 688000.0, "appreciation_pct": 27.94, "capital_gain": 150250.0, "price_per_sqft": 1690.42, "rental_yield_pct": 4.81}, {"id": 76, "notes": "26.2.18. 매매", "unit_no": "1007", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 595.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-1007-Honolulu-HI-96814/145638836_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 416, "original_price": 623850.0, "est_rent_monthly": 2790.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 77, "notes": "25.9.5. 매매, DH뷰", "unit_no": "1010", "unit_type": "Studio", "view_type": "Ocean/DH", "hoa_monthly": 606.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-1010-Honolulu-HI-96814/145638668_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 407, "original_price": 450450.0, "est_rent_monthly": 2756.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 80, "notes": null, "unit_no": "1708", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 890.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-1708-Honolulu-HI-96814/145639030_zpid/", "living_sqft": 653, "original_price": 908750.0, "est_rent_monthly": 3501.0, "current_list_price": 900000.0, "appreciation_pct": -0.96, "capital_gain": -8750.0, "price_per_sqft": 1378.25, "rental_yield_pct": 4.67}, {"id": 79, "notes": "24년 857,000 매매", "unit_no": "2108", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 958.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-2108-Honolulu-HI-96814/145638251_zpid/", "living_sqft": 653, "original_price": 914000.0, "est_rent_monthly": 3501.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 81, "notes": "임대료 추정(for rent), 실거래(2603 매매 2504호)", "unit_no": "2604", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1134.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-2604-Honolulu-HI-96816/461825548_zpid/", "living_sqft": 985, "original_price": 1346000.0, "est_rent_monthly": 4740.0, "current_list_price": 1350000.0, "appreciation_pct": 0.3, "capital_gain": 4000.0, "price_per_sqft": 1370.56, "rental_yield_pct": 4.21}, {"id": 82, "notes": null, "unit_no": "2202", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 956.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-2202-Honolulu-HI-96814/145637979_zpid/", "living_sqft": 983, "original_price": 1372084.0, "est_rent_monthly": 4960.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 83, "notes": "24년 rent $6750\r\n24.9. #2800 매매", "unit_no": "1900", "unit_type": "3BR", "view_type": "Ocean/DH", "hoa_monthly": 1941.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-1900-Honolulu-HI-96814/145638361_zpid/", "living_sqft": 1334, "original_price": 1956000.0, "est_rent_monthly": 7315.0, "current_list_price": 2100000.0, "appreciation_pct": 7.36, "capital_gain": 144000.0, "price_per_sqft": 1574.21, "rental_yield_pct": 4.18}, {"id": 84, "notes": "25년 매물등록\r\n실거래(24.07.매매 1001호)", "unit_no": "4006", "unit_type": "PH", "view_type": "Ocean/DH/City", "hoa_monthly": 1301.0, "listing_url": "https://www.zillow.com/homedetails/1001-Queen-St-PENTHOUSE-4006-Honolulu-HI-96816/457113347_zpid/", "living_sqft": 983, "original_price": 1575000.0, "est_rent_monthly": 4729.0, "current_list_price": 1688000.0, "appreciation_pct": 7.17, "capital_gain": 113000.0, "price_per_sqft": 1717.19, "rental_yield_pct": 3.36}], "unit_count": 9}, {"building_name": "Ke Kilohana", "year_completed": 2019, "status": "completed", "latitude": 21.296916, "longitude": -157.855405, "notes": "23~24년 실거래가 일부 반영", "units": [{"id": 85, "notes": "예상임대료, 2026", "unit_no": "1712", "unit_type": "1BR", "view_type": "City, Ocean", "hoa_monthly": 690.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-1712-Honolulu-HI-96814/241842119_zpid/", "living_sqft": 472, "original_price": 434746.0, "est_rent_monthly": 3058.0, "current_list_price": 525000.0, "appreciation_pct": 20.76, "capital_gain": 90254.0, "price_per_sqft": 1112.29, "rental_yield_pct": 6.99}, {"id": 86, "notes": "예상임대료, 2025년 12월보다 -3.4% 인하", "unit_no": "3410", "unit_type": "1BR", "view_type": "City, Ocean", "hoa_monthly": 751.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-3410-Honolulu-HI-96814/241842330_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 477, "original_price": 442246.0, "est_rent_monthly": 3072.0, "current_list_price": 569000.0, "appreciation_pct": 28.66, "capital_gain": 126754.0, "price_per_sqft": 1192.87, "rental_yield_pct": 6.48}, {"id": 87, "notes": "rent $3,500\r\n#3701 2023년 매매", "unit_no": "3907", "unit_type": "2BR", "view_type": "City, Mountain", "hoa_monthly": 1078.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-3907-Honolulu-HI-96814/241842384_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 744, "original_price": 695000.0, "est_rent_monthly": 3500.0, "current_list_price": 849000.0, "appreciation_pct": 22.16, "capital_gain": 154000.0, "price_per_sqft": 1141.13, "rental_yield_pct": 4.95}, {"id": 88, "notes": null, "unit_no": "4208", "unit_type": "2BR", "view_type": "City, Ocean", "hoa_monthly": 1404.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-4208-Honolulu-HI-96814/241842414_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 989, "original_price": 950000.0, "est_rent_monthly": 4205.0, "current_list_price": 998000.0, "appreciation_pct": 5.05, "capital_gain": 48000.0, "price_per_sqft": 1009.1, "rental_yield_pct": 5.06}, {"id": 90, "notes": "예상임대료, 2024", "unit_no": "3507", "unit_type": "3BR", "view_type": "Coastline, City, Ocean", "hoa_monthly": 1420.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-3507-Honolulu-HI-96814/241842339_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1180, "original_price": 895000.0, "est_rent_monthly": 5136.0, "current_list_price": 869000.0, "appreciation_pct": -2.91, "capital_gain": -26000.0, "price_per_sqft": 736.44, "rental_yield_pct": 7.09}, {"id": 91, "notes": "2층, 다층 분리형, 2023", "unit_no": "4211", "unit_type": "3BR", "view_type": "Coastline, City, Mountain(s), Ocean, Sunrise", "hoa_monthly": 1484.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-4211-Honolulu-HI-96814/241842417_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare", "living_sqft": 1620, "original_price": 1225000.0, "est_rent_monthly": 6133.0, "current_list_price": 1385000.0, "appreciation_pct": 13.06, "capital_gain": 160000.0, "price_per_sqft": 854.94, "rental_yield_pct": 5.31}, {"id": 89, "notes": "2024년 매매", "unit_no": "2310", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1055.0, "listing_url": "https://www.zillow.com/homedetails/988-Halekauwila-St-APT-2310-Honolulu-HI-96814/241842198_zpid/", "living_sqft": 962, "original_price": 840000.0, "est_rent_monthly": 4291.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 7}, {"building_name": "'A'ali'i", "year_completed": 2021, "status": "completed", "latitude": 21.295877, "longitude": -157.853524, "notes": "Studio / 1BR / 2BR", "units": [{"id": 92, "notes": "#3908 26년 매매", "unit_no": "3506", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 575.0, "listing_url": "https://www.zillow.com/homedetails/987-Queen-St-3506-Honolulu-HI-96814/250259322_zpid/", "living_sqft": 367, "original_price": 597900.0, "est_rent_monthly": 2400.0, "current_list_price": 589000.0, "appreciation_pct": -1.49, "capital_gain": -8900.0, "price_per_sqft": 1604.9, "rental_yield_pct": 4.89}, {"id": 93, "notes": "#3700 24년 매매", "unit_no": "3517", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 874.0, "listing_url": "https://www.zillow.com/homedetails/987-Queen-St-3517-Honolulu-HI-96814/250257715_zpid/", "living_sqft": 554, "original_price": 825408.0, "est_rent_monthly": 3315.0, "current_list_price": 960000.0, "appreciation_pct": 16.31, "capital_gain": 134592.0, "price_per_sqft": 1732.85, "rental_yield_pct": 4.14}, {"id": 94, "notes": "#3514 25년 매매", "unit_no": "3714", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1311.0, "listing_url": "https://www.zillow.com/homedetails/987-Queen-St-3714-Honolulu-HI-96814/250257933_zpid/", "living_sqft": 842, "original_price": 1279650.0, "est_rent_monthly": 4232.0, "current_list_price": 1425000.0, "appreciation_pct": 11.36, "capital_gain": 145350.0, "price_per_sqft": 1692.4, "rental_yield_pct": 3.56}, {"id": 95, "notes": "#2001 26년 매매($129만)", "unit_no": "3802", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1443.0, "listing_url": "https://www.zillow.com/homedetails/987-Queen-St-3802-Honolulu-HI-96814/250258892_zpid/", "living_sqft": 826, "original_price": 1444500.0, "est_rent_monthly": 4142.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 4}, {"building_name": "Ko'ula", "year_completed": 2022, "status": "completed", "latitude": 21.294806, "longitude": -157.854626, "notes": "1BR / 2BR 세분화", "units": [{"id": 96, "notes": "#3509 24년 매매", "unit_no": "2305", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 604.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-2305-Honolulu-HI-96814/304112799_zpid/", "living_sqft": 433, "original_price": 691000.0, "est_rent_monthly": 2965.0, "current_list_price": 633000.0, "appreciation_pct": -8.39, "capital_gain": -58000.0, "price_per_sqft": 1461.89, "rental_yield_pct": 5.62}, {"id": 98, "notes": "ph 매물, #3702 25년 매매", "unit_no": "4002", "unit_type": "1BR-02", "view_type": "Ocean/DH", "hoa_monthly": 1087.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-PENTHOUSE-4002-Honolulu-HI-96814/461799026_zpid/", "living_sqft": 758, "original_price": 1445000.0, "est_rent_monthly": 4211.0, "current_list_price": 1498000.0, "appreciation_pct": 3.67, "capital_gain": 53000.0, "price_per_sqft": 1976.25, "rental_yield_pct": 3.37}, {"id": 97, "notes": "#3701 24년 매매", "unit_no": "2901", "unit_type": "1BR-01", "view_type": "Ocean", "hoa_monthly": 1058.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-2901-Honolulu-HI-96814/304111877_zpid/", "living_sqft": 739, "original_price": 1272000.0, "est_rent_monthly": 3877.0, "current_list_price": 1519900.0, "appreciation_pct": 19.49, "capital_gain": 247900.0, "price_per_sqft": 2056.7, "rental_yield_pct": 3.06}, {"id": 99, "notes": "#3210 24년 매매", "unit_no": "3810", "unit_type": "2BR-01", "view_type": "Ocean", "hoa_monthly": 1275.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-UNIT-3810-Honolulu-HI-96813/456764452_zpid/", "living_sqft": 942, "original_price": 1474400.0, "est_rent_monthly": 4500.0, "current_list_price": 1680000.0, "appreciation_pct": 13.94, "capital_gain": 205600.0, "price_per_sqft": 1783.44, "rental_yield_pct": 3.21}, {"id": 100, "notes": "#2204 25년 매매", "unit_no": "3504", "unit_type": "2BR-02", "view_type": "Ocean/DH", "hoa_monthly": 1604.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-3504-Honolulu-HI-96814/304112953_zpid/", "living_sqft": 1133, "original_price": 1673200.0, "est_rent_monthly": 4858.0, "current_list_price": 1754000.0, "appreciation_pct": 4.83, "capital_gain": 80800.0, "price_per_sqft": 1548.1, "rental_yield_pct": 3.32}, {"id": 101, "notes": "#3300 25년 매매($270만)\r\n#2800 26년매매($265만)", "unit_no": "2100", "unit_type": "3BR", "view_type": "Ocean/DH", "hoa_monthly": 2053.0, "listing_url": "https://www.zillow.com/homedetails/1000-Auahi-St-2100-Honolulu-HI-96814/304112294_zpid/", "living_sqft": 1457, "original_price": 1899000.0, "est_rent_monthly": 5846.0, "current_list_price": 2690000.0, "appreciation_pct": 41.65, "capital_gain": 791000.0, "price_per_sqft": 1846.26, "rental_yield_pct": 2.61}], "unit_count": 6}, {"building_name": "Victoria Place", "year_completed": 2024, "status": "completed", "latitude": 21.294099, "longitude": -157.854829, "notes": "최신 완공, PH 라인 포함", "units": [{"id": 102, "notes": "#3108(동일라인) 25년 매매 (최고가)", "unit_no": "2908", "unit_type": "1BR", "view_type": "Ocean/DH/Harbor", "hoa_monthly": 1945.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-2908-Honolulu-HI-96814/333518103_zpid/", "living_sqft": 947, "original_price": 1658000.0, "est_rent_monthly": 6371.0, "current_list_price": 1875000.0, "appreciation_pct": 13.09, "capital_gain": 217000.0, "price_per_sqft": 1979.94, "rental_yield_pct": 4.08}, {"id": 103, "notes": "#4006 해당호 26/5/6 매매\r\n#3905(PT) 25년 매매", "unit_no": "4006", "unit_type": "1BR(PH)", "view_type": "Ocean/DH/Harbor", "hoa_monthly": 1836.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-GPH-4006-Honolulu-HI-96814/461207733_zpid/", "living_sqft": 895, "original_price": 1806000.0, "est_rent_monthly": 6044.0, "current_list_price": 1925000.0, "appreciation_pct": 6.59, "capital_gain": 119000.0, "price_per_sqft": 2150.84, "rental_yield_pct": 3.77}, {"id": 105, "notes": "#1710 26년 ($240만) 매매\r\n#2310 25년($250만) 매매", "unit_no": "2810", "unit_type": "2BR-02", "view_type": "City/DH", "hoa_monthly": 2323.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-2810-Honolulu-HI-96814/333517550_zpid/", "living_sqft": 1164, "original_price": 2019500.0, "est_rent_monthly": 6928.0, "current_list_price": 2280000.0, "appreciation_pct": 12.9, "capital_gain": 260500.0, "price_per_sqft": 1958.76, "rental_yield_pct": 3.65}, {"id": 104, "notes": "#2102 25년 매매, 2호라인 고가", "unit_no": "3402", "unit_type": "2BR-01", "view_type": "Ocean/DH", "hoa_monthly": 2637.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-3402-Honolulu-HI-96814/333518257_zpid/", "living_sqft": 1295, "original_price": 2566800.0, "est_rent_monthly": 7684.0, "current_list_price": 3100000.0, "appreciation_pct": 20.77, "capital_gain": 533200.0, "price_per_sqft": 2393.82, "rental_yield_pct": 2.97}, {"id": 106, "notes": "#2501(동일라인) 26년 매매", "unit_no": "1101", "unit_type": "3BR", "view_type": "Ocean/DH", "hoa_monthly": 3521.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-1101-Honolulu-HI-96814/145638128_zpid/", "living_sqft": 1761, "original_price": 3556750.0, "est_rent_monthly": 5691.0, "current_list_price": 4400000.0, "appreciation_pct": 23.71, "capital_gain": 843250.0, "price_per_sqft": 2498.58, "rental_yield_pct": 1.55}, {"id": 107, "notes": "#3900PT 26년 매매(최고가)\r\n#3600 25년($585만) 매매", "unit_no": "2700", "unit_type": "3BR(PH)", "view_type": "Ocean/DH/City", "hoa_monthly": 3692.0, "listing_url": "https://www.zillow.com/homedetails/1100-Ala-Moana-Blvd-2700-Honolulu-HI-96814/333517855_zpid/", "living_sqft": 1851, "original_price": 4523050.0, "est_rent_monthly": 8202.0, "current_list_price": 6200000.0, "appreciation_pct": 37.08, "capital_gain": 1676950.0, "price_per_sqft": 3349.54, "rental_yield_pct": 1.59}], "unit_count": 6}, {"building_name": "Ulana", "year_completed": 2025, "status": "completed", "latitude": 21.29632, "longitude": -157.857913, "notes": "예약 주거 빌딩, 2~10년 매매제한", "units": [{"id": 108, "notes": "동일물건 26.3.4. 매매", "unit_no": "810", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 562.0, "listing_url": "https://www.zillow.com/homedetails/828-Auahi-St-APT-810-Honolulu-HI-96813/460208010_zpid/", "living_sqft": 529, "original_price": 523800.0, "est_rent_monthly": 3254.0, "current_list_price": 565000.0, "appreciation_pct": 7.87, "capital_gain": 41200.0, "price_per_sqft": 1068.05, "rental_yield_pct": 6.91}], "unit_count": 1}, {"building_name": "The Park Ward Village", "year_completed": 2026, "status": "completed", "latitude": 21.296337, "longitude": -157.855106, "notes": "2026 입주, 소유권 이전 전 분양가 확인 불가", "units": [{"id": 109, "notes": "2026 입주, 분양가 비공개", "unit_no": "1008", "unit_type": "Studio", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 465, "original_price": null, "est_rent_monthly": null, "current_list_price": 876000.0, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": 1883.87, "rental_yield_pct": null}, {"id": 115, "notes": "2026 입주, 분양가 비공개, 20may2026 추가", "unit_no": "516", "unit_type": "1BR Pod", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 749, "original_price": null, "est_rent_monthly": null, "current_list_price": 1364000.0, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": 1821.09, "rental_yield_pct": null}, {"id": 110, "notes": "2026 입주, 분양가 비공개", "unit_no": "3001", "unit_type": "1BR Tower", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 707, "original_price": null, "est_rent_monthly": null, "current_list_price": 1726000.0, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": 2441.3, "rental_yield_pct": null}, {"id": 111, "notes": "2026 입주, 분양가 비공개", "unit_no": "303", "unit_type": "2BR Pod", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 1169, "original_price": null, "est_rent_monthly": null, "current_list_price": 1925000.0, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": 1646.71, "rental_yield_pct": null}, {"id": 112, "notes": "2026 입주, 매물 없음", "unit_no": null, "unit_type": "2BR Tower", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 1050, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 113, "notes": "2026 입주, 분양가 비공개", "unit_no": "200", "unit_type": "3BR Pod", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 1554, "original_price": null, "est_rent_monthly": null, "current_list_price": 2719000.0, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": 1749.68, "rental_yield_pct": null}, {"id": 114, "notes": "2026 입주, 매물 없음", "unit_no": null, "unit_type": "3BR Tower", "view_type": null, "hoa_monthly": null, "listing_url": null, "living_sqft": 1434, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 7}, {"building_name": "Kalae", "year_completed": 2027, "status": "under_construction", "latitude": 21.29531, "longitude": -157.85674, "notes": "분양 중", "units": [], "unit_count": 0}, {"building_name": "The Launiu", "year_completed": 2028, "status": "under_construction", "latitude": 21.29594, "longitude": -157.8579, "notes": "분양 중", "units": [], "unit_count": 0}, {"building_name": "'Ilima", "year_completed": 2030, "status": "under_construction", "latitude": 21.29277, "longitude": -157.85109, "notes": "2030 완공 예정", "units": [], "unit_count": 0}, {"building_name": "Melia", "year_completed": 2030, "status": "under_construction", "latitude": 21.2927, "longitude": -157.8514, "notes": "건설 중", "units": [], "unit_count": 0}];
+
+    const TOWER_ABBR = {
+      "Waiea": "Wa", "Anaha": "An", "Ae'o": "Ae", "Ke Kilohana": "Ke",
+      "'A'ali'i": "Aa", "Ko'ula": "Ko", "Victoria Place": "VP", "Ulana": "Ul",
+      "The Park Ward Village": "Pa", "Kalae": "Ka", "The Launiu": "La",
+      "'Ilima": "Il", "Melia": "Me"
+    };
+
+    let currentMode = "appreciation";
+    const markerMap = {};
+
+    const map = L.map("map").setView([21.2950, -157.8540], 16);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19
+    }).addTo(map);
+
+    function fmtMoney(v) {
+      if (v === null || v === undefined) return "-";
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    // 매물가 전용 — NULL이면 "매물 없음" 표시
+    function fmtListPrice(v) {
+      if (v === null || v === undefined) {
+        return '<span class="empty-listing">매물 없음</span>';
+      }
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    // 분양가 전용 — NULL이면 "등기 미반영" 표시
+    function fmtOriginalPrice(v) {
+      if (v === null || v === undefined) {
+        return '<span class="empty-original">등기 미반영</span>';
+      }
+      return "$" + Math.round(v).toLocaleString();
+    }
+
+    function fmtPct(v) {
+      if (v === null || v === undefined) return '<span class="pct-null">-</span>';
+      const sign = v >= 0 ? "+" : "";
+      const cls = v >= 0 ? "pct-positive" : "pct-negative";
+      return `<span class="${cls}">${sign}${v.toFixed(1)}%</span>`;
+    }
+
+    function fmtYield(v) {
+      if (v === null || v === undefined) return '<span class="pct-null">-</span>';
+      let cls = "yield-low";
+      if (v >= 5) cls = "yield-high";
+      else if (v >= 3) cls = "yield-mid";
+      return `<span class="${cls}">${v.toFixed(2)}%</span>`;
+    }
+
+    function fmtInt(v) {
+      if (v === null || v === undefined) return "-";
+      return v.toLocaleString();
+    }
+
+    function buildPopup(tower, mode) {
+      const statusLabel = tower.status === "completed" ? "완공" : "완공 예정";
+
+      if (!tower.units || tower.units.length === 0) {
+        return `
+          <h3 class="popup-tower-name">${tower.building_name}</h3>
+          <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel}</p>
+          <div class="popup-no-data">
+            <span class="popup-no-data-icon">📋</span>
+            아직 매물 정보가 등록되지 않았습니다.
+          </div>
+        `;
+      }
+
+      let headerCells, bodyRows, noteHTML = "";
+
+      if (mode === "appreciation") {
+        headerCells = `
+          <th>Type</th><th>호수</th><th>면적</th>
+          <th>분양가</th><th>매물가</th><th>상승률</th>
+        `;
+        bodyRows = tower.units.map(u => `
+          <tr>
+            <td>${u.unit_type}</td>
+            <td>${u.unit_no || "-"}</td>
+            <td>${fmtInt(u.living_sqft)}</td>
+            <td>${fmtOriginalPrice(u.original_price)}</td>
+            <td>${fmtListPrice(u.current_list_price)}</td>
+            <td>${fmtPct(u.appreciation_pct)}</td>
+          </tr>
+        `).join("");
+      } else {
+        noteHTML = `
+          <div class="popup-yield-note">
+            <span class="popup-yield-note-icon">ⓘ</span>
+            임대료는 시장 추정치이며, 실제 임대 수익은 호수, 시기, 임차 조건에 따라 달라질 수 있습니다.
+          </div>
+        `;
+        headerCells = `
+          <th>Type</th><th>호수</th><th>면적</th>
+          <th>매물가</th>
+          <th>임대료/월<i class="col-info" data-tooltip="시장 추정치 (실거래 X)">i</i></th>
+          <th>수익률</th>
+        `;
+        bodyRows = tower.units.map(u => `
+          <tr>
+            <td>${u.unit_type}</td>
+            <td>${u.unit_no || "-"}</td>
+            <td>${fmtInt(u.living_sqft)}</td>
+            <td>${fmtListPrice(u.current_list_price)}</td>
+            <td>${fmtMoney(u.est_rent_monthly)}</td>
+            <td>${fmtYield(u.rental_yield_pct)}</td>
+          </tr>
+        `).join("");
+      }
+
+      return `
+        <h3 class="popup-tower-name">${tower.building_name}</h3>
+        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        ${noteHTML}
+        <table class="popup-table">
+          <thead><tr>${headerCells}</tr></thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+      `;
+    }
+
+    towersData.forEach(tower => {
+      const cssClass = tower.status === "completed" ? "marker-completed" : "marker-construction";
+      const abbr = TOWER_ABBR[tower.building_name] || "??";
+
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="${cssClass}">${abbr}</div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+
+      const marker = L.marker([tower.latitude, tower.longitude], { icon: icon })
+        .addTo(map)
+        .bindPopup(buildPopup(tower, currentMode), { maxWidth: 580, minWidth: 280 });
+
+      markerMap[tower.building_name] = marker;
+    });
+
+    function switchMode(newMode) {
+      if (currentMode === newMode) return;
+      currentMode = newMode;
+      towersData.forEach(tower => {
+        const marker = markerMap[tower.building_name];
+        marker.setPopupContent(buildPopup(tower, currentMode));
+      });
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === currentMode);
+      });
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchMode(btn.dataset.mode));
+    });
+
+    document.getElementById("disclaimer-header").addEventListener("click", () => {
+      document.getElementById("disclaimer").classList.toggle("expanded");
+    });
+
+    // 범례 토글 (모바일에서만 의미 있음)
+    document.getElementById("legend-header").addEventListener("click", () => {
+      document.getElementById("legend").classList.toggle("expanded");
+    });
+
+    // 인사이트 패널 상세 토글 (모바일에서만 의미 있음)
+    document.getElementById("insights-toggle").addEventListener("click", () => {
+      document.getElementById("insights-toggle").classList.toggle("expanded");
+      document.getElementById("insights-toplist").classList.toggle("expanded");
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+

@@ -774,8 +774,8 @@
   <header>
     <h1>Ward Village 시세맵</h1>
     <div class="tabs">
-      <button class="tab-btn active" data-mode="appreciation">상승률</button>
-      <button class="tab-btn" data-mode="yield">임대수익률</button>
+      <button class="tab-btn active" data-mode="appreciation">누적 상승률</button>
+      <button class="tab-btn" data-mode="yield">연 임대수익률</button>
     </div>
     <div class="meta">{{ total_towers }}개 콘도 · {{ total_units }}개 매물 · {{ build_timestamp[:10] }}</div>
   </header>
@@ -788,17 +788,17 @@
       <div class="insights-segment">
         <div class="seg-label">전체 시장 <span class="seg-count">({{ s.overall.listed_units }}/{{ s.overall.total_units }})</span></div>
         <div class="seg-metrics">
-          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.overall.avg_appreciation_pct) }}%</span></span>
+          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.overall.avg_appreciation_pct) }}%</span></span>
           <span class="metric-sep">·</span>
-          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.overall.avg_yield_pct) }}%</span></span>
+          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.overall.avg_yield_pct) }}%</span></span>
         </div>
       </div>
       <div class="insights-segment insights-luxury">
-        <div class="seg-label">럭셔리 시장 <span class="seg-count">({{ s.luxury.listed_units }}/{{ s.luxury.total_units }})</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">({{ s.luxury.listed_units }}/{{ s.luxury.total_units }})</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
         <div class="seg-metrics">
-          <span class="metric"><span class="metric-label">평균 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.luxury.avg_appreciation_pct) }}%</span></span>
+          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.luxury.avg_appreciation_pct) }}%</span></span>
           <span class="metric-sep">·</span>
-          <span class="metric"><span class="metric-label">평균 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.luxury.avg_yield_pct) }}%</span></span>
+          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.luxury.avg_yield_pct) }}%</span></span>
         </div>
       </div>
     </div>
@@ -1005,7 +1005,7 @@
       if (mode === "appreciation") {
         headerCells = `
           <th>Type</th><th>호수</th><th>면적</th>
-          <th>분양가</th><th>매물가</th><th>상승률</th>
+          <th>분양가</th><th>매물가</th><th>누적 상승률</th>
         `;
         bodyRows = tower.units.map(u => `
           <tr>
@@ -1028,7 +1028,7 @@
           <th>Type</th><th>호수</th><th>면적</th>
           <th>매물가</th>
           <th>임대료/월<i class="col-info" data-tooltip="시장 추정치 (실거래 X)">i</i></th>
-          <th>수익률</th>
+          <th>연 수익률</th>
         `;
         bodyRows = tower.units.map(u => `
           <tr>
@@ -1105,6 +1105,7 @@
 
 </body>
 </html>
+
 
 
 

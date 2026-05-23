@@ -1,10 +1,11 @@
 {
-  "build_timestamp": "2026-05-21T13:58:54.509397",
+  "build_timestamp": "2026-05-22T13:58:58.131806",
   "total_units": 58,
   "total_towers": 13,
   "towers": [
     {
       "building_name": "Waiea",
+      "neighborhood": "Ward Village",
       "year_completed": 2016,
       "status": "completed",
       "latitude": 21.293447,
@@ -186,6 +187,7 @@
     },
     {
       "building_name": "Anaha",
+      "neighborhood": "Ward Village",
       "year_completed": 2017,
       "status": "completed",
       "latitude": 21.293687,
@@ -333,6 +335,7 @@
     },
     {
       "building_name": "Ae'o",
+      "neighborhood": "Ward Village",
       "year_completed": 2018,
       "status": "completed",
       "latitude": 21.295426,
@@ -497,6 +500,7 @@
     },
     {
       "building_name": "Ke Kilohana",
+      "neighborhood": "Ward Village",
       "year_completed": 2019,
       "status": "completed",
       "latitude": 21.296916,
@@ -627,6 +631,7 @@
     },
     {
       "building_name": "'A'ali'i",
+      "neighborhood": "Ward Village",
       "year_completed": 2021,
       "status": "completed",
       "latitude": 21.295877,
@@ -706,6 +711,7 @@
     },
     {
       "building_name": "Ko'ula",
+      "neighborhood": "Ward Village",
       "year_completed": 2022,
       "status": "completed",
       "latitude": 21.294806,
@@ -819,6 +825,7 @@
     },
     {
       "building_name": "Victoria Place",
+      "neighborhood": "Ward Village",
       "year_completed": 2024,
       "status": "completed",
       "latitude": 21.294099,
@@ -932,6 +939,7 @@
     },
     {
       "building_name": "Ulana",
+      "neighborhood": "Ward Village",
       "year_completed": 2025,
       "status": "completed",
       "latitude": 21.29632,
@@ -960,6 +968,7 @@
     },
     {
       "building_name": "The Park Ward Village",
+      "neighborhood": "Ward Village",
       "year_completed": 2026,
       "status": "completed",
       "latitude": 21.296337,
@@ -1090,6 +1099,7 @@
     },
     {
       "building_name": "Kalae",
+      "neighborhood": "Ward Village",
       "year_completed": 2027,
       "status": "under_construction",
       "latitude": 21.29531,
@@ -1100,6 +1110,7 @@
     },
     {
       "building_name": "The Launiu",
+      "neighborhood": "Ward Village",
       "year_completed": 2028,
       "status": "under_construction",
       "latitude": 21.29594,
@@ -1110,6 +1121,7 @@
     },
     {
       "building_name": "'Ilima",
+      "neighborhood": "Ward Village",
       "year_completed": 2030,
       "status": "under_construction",
       "latitude": 21.29277,
@@ -1120,6 +1132,7 @@
     },
     {
       "building_name": "Melia",
+      "neighborhood": "Ward Village",
       "year_completed": 2030,
       "status": "under_construction",
       "latitude": 21.2927,

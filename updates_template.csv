@@ -1,0 +1,10 @@
+﻿action,building_name,unit_type,unit_no,living_sqft,original_price,current_list_price,est_rent_monthly,listing_url,notes
+UPDATE,Anaha,1BR,507,,,1099000,,,예시: 매물가만 변경
+UPDATE,Victoria Place,2BR-02,2810,,,,,예시: 매물 사라짐 (current_list_price 비워둠)
+INSERT,Anaha,Studio,1102,538,530000,695000,2800,https://zillow.com/...,예시: 신규 매물 추가
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,

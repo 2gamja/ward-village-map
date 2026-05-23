@@ -195,10 +195,10 @@ def fetch_and_enrich():
         supabase
         .table("towers")
         .select(
-            "id, building_name, year_completed, status, latitude, longitude, notes, "
-            "units(id, unit_type, unit_no, living_sqft, "
-                  "original_price, current_list_price, est_rent_monthly, "
-                  "hoa_monthly, view_type, listing_url, notes)"
+            "id, building_name, neighborhood, year_completed, status, latitude, longitude, notes, "
+    "units(id, unit_type, unit_no, living_sqft, "
+          "original_price, current_list_price, est_rent_monthly, "
+          "hoa_monthly, view_type, listing_url, notes)"
         )
         .order("year_completed")
         .execute()
@@ -224,13 +224,14 @@ def fetch_and_enrich():
         
         towers_output.append({
             "building_name": tower["building_name"],
-            "year_completed": tower["year_completed"],
-            "status": tower["status"],
-            "latitude": tower["latitude"],
-            "longitude": tower["longitude"],
-            "notes": tower.get("notes"),
-            "units": enriched_units,
-            "unit_count": len(enriched_units),
+    "neighborhood": tower["neighborhood"],
+    "year_completed": tower["year_completed"],
+    "status": tower["status"],
+    "latitude": tower["latitude"],
+    "longitude": tower["longitude"],
+    "notes": tower.get("notes"),
+    "units": enriched_units,
+    "unit_count": len(enriched_units),
         })
     
     # 통계 계산

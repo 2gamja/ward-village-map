@@ -209,6 +209,39 @@
       font-size: 10px;
       font-weight: 700;
       cursor: help;
+      position: relative;
+    }
+    .seg-info:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #333;
+      color: white;
+      font-size: 11px;
+      font-weight: normal;
+      line-height: 1.5;
+      width: 320px;
+      white-space: normal;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2000;
+      pointer-events: none;
+      text-align: left;
+    }
+    .seg-info:hover::before {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 2px;
+      border: 4px solid transparent;
+      border-bottom-color: #333;
+      z-index: 2000;
     }
     .seg-metrics {
       display: flex;
@@ -570,6 +603,27 @@
       display: inline-block;
       margin-right: 4px;
     }
+
+    /* 콘도 레벨 경고 박스 (리스홀드 전환 등) */
+    .popup-tower-warning {
+      margin: 8px 0 12px 0;
+      padding: 8px 12px;
+      background: #FFF3CD;
+      border-left: 3px solid #FFB300;
+      border-radius: 3px;
+      font-size: 10.5px;
+      color: #6B4F00;
+      line-height: 1.5;
+    }
+    .popup-tower-warning strong {
+      color: #4A3700;
+      font-weight: 700;
+    }
+    .popup-tower-warning-icon {
+      display: inline-block;
+      margin-right: 4px;
+      font-size: 12px;
+    }
     .popup-table {
       border-collapse: collapse;
       width: 100%;
@@ -913,7 +967,7 @@
         </div>
       </div>
       <div class="insights-segment insights-luxury">
-        <div class="seg-label">럭셔리 시장 <span class="seg-count">(0/0)</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">(0/0)</span> <span class="seg-info" data-tooltip="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
         <div class="seg-metrics">
           
           
@@ -1023,13 +1077,13 @@
           <div class="legend-status-divider">완공 예정</div>
           
           <div class="legend-item">
-            <span class="legend-marker under-construction" style="background: #10B981;">AA</span>
-            Alia (2027)
+            <span class="legend-marker under-construction" style="background: #10B981;">KU</span>
+            Kaliu (2027)
           </div>
           
           <div class="legend-item">
-            <span class="legend-marker under-construction" style="background: #10B981;">KU</span>
-            Kaliu (2027)
+            <span class="legend-marker under-construction" style="background: #10B981;">AA</span>
+            Alia (2027)
           </div>
           
           <div class="legend-item">
@@ -1080,7 +1134,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    const towersData = [{"building_name": "Symphony Honolulu", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.3000285, "longitude": -157.8526384, "notes": "888 Kapiolani Blvd.", "units": [{"id": 185, "notes": null, "unit_no": "2001", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 803.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2001-Honolulu-HI-96813/121872151_zpid/", "living_sqft": 672, "original_price": 401700.0, "est_rent_monthly": 3104.0, "current_list_price": 805000.0, "appreciation_pct": 100.4, "capital_gain": 403300.0, "price_per_sqft": 1197.92, "rental_yield_pct": 4.63}, {"id": 186, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3410-Honolulu-HI-96813/121876322_zpid/", "unit_no": "2703", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1383.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2703-Honolulu-HI-96813/121876808_zpid/", "living_sqft": 1142, "original_price": 1047800.0, "est_rent_monthly": 4503.0, "current_list_price": 1280000.0, "appreciation_pct": 22.16, "capital_gain": 232200.0, "price_per_sqft": 1120.84, "rental_yield_pct": 4.22}, {"id": 188, "notes": null, "unit_no": "1709", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1759.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-1709-Honolulu-HI-96813/121871143_zpid/", "living_sqft": 1454, "original_price": 1088000.0, "est_rent_monthly": 6195.0, "current_list_price": 1600000.0, "appreciation_pct": 47.06, "capital_gain": 512000.0, "price_per_sqft": 1100.41, "rental_yield_pct": 4.65}, {"id": 189, "notes": null, "unit_no": "3505", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1837.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3505-Honolulu-HI-96813/121876629_zpid/", "living_sqft": 1520, "original_price": 1490000.0, "est_rent_monthly": 6417.0, "current_list_price": 1865000.0, "appreciation_pct": 25.17, "capital_gain": 375000.0, "price_per_sqft": 1226.97, "rental_yield_pct": 4.13}, {"id": 190, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 187, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3910-Honolulu-HI-96813/121870994_zpid/", "unit_no": "4505", "unit_type": "2BR(PH)", "view_type": "Ocean", "hoa_monthly": 1546.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-4505-Honolulu-HI-96813/121870552_zpid/", "living_sqft": 1278, "original_price": 1725000.0, "est_rent_monthly": 5800.0, "current_list_price": 1400000.0, "appreciation_pct": -18.84, "capital_gain": -325000.0, "price_per_sqft": 1095.46, "rental_yield_pct": 4.97}], "unit_count": 6}, {"building_name": "The Collection", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.29934627, "longitude": -157.8623146, "notes": "600 Ala Moana Blvd.", "units": [{"id": 173, "notes": null, "unit_no": "3604", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 681.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3604-Honolulu-HI-96813/121871779_zpid/", "living_sqft": 580, "original_price": 500631.0, "est_rent_monthly": 3284.0, "current_list_price": 775000.0, "appreciation_pct": 54.8, "capital_gain": 274369.0, "price_per_sqft": 1336.21, "rental_yield_pct": 5.08}, {"id": 174, "notes": null, "unit_no": "508", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 821.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-508-Honolulu-HI-96813/121871013_zpid/", "living_sqft": 700, "original_price": 459000.0, "est_rent_monthly": 3737.0, "current_list_price": 825000.0, "appreciation_pct": 79.74, "capital_gain": 366000.0, "price_per_sqft": 1178.57, "rental_yield_pct": 5.44}, {"id": 175, "notes": null, "unit_no": "2806", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1031.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2806-Honolulu-HI-96813/121876299_zpid/", "living_sqft": 879, "original_price": 728634.0, "est_rent_monthly": 4519.0, "current_list_price": 1199000.0, "appreciation_pct": 64.55, "capital_gain": 470366.0, "price_per_sqft": 1364.05, "rental_yield_pct": 4.52}, {"id": 176, "notes": null, "unit_no": "2402", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1215.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2402-Honolulu-HI-96813/121874152_zpid/", "living_sqft": 1036, "original_price": 819483.0, "est_rent_monthly": 5090.0, "current_list_price": 1325000.0, "appreciation_pct": 61.69, "capital_gain": 505517.0, "price_per_sqft": 1278.96, "rental_yield_pct": 4.61}, {"id": 177, "notes": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3101-Honolulu-HI-96813/121874995_zpid/", "unit_no": "2801", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1330.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2801-Honolulu-HI-96813/121871733_zpid/", "living_sqft": 1133, "original_price": 951921.0, "est_rent_monthly": 5481.0, "current_list_price": 1449000.0, "appreciation_pct": 52.22, "capital_gain": 497079.0, "price_per_sqft": 1278.91, "rental_yield_pct": 4.54}, {"id": 178, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 6}, {"building_name": "Keauhou Place", "neighborhood": "Salt", "year_completed": 2017, "status": "completed", "latitude": 21.30159788, "longitude": -157.8601304, "notes": "555 South St.", "units": [{"id": 179, "notes": null, "unit_no": "3409", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 738.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3409-Honolulu-HI-96813/243811934_zpid/", "living_sqft": 636, "original_price": 565800.0, "est_rent_monthly": 2939.0, "current_list_price": 724900.0, "appreciation_pct": 28.12, "capital_gain": 159100.0, "price_per_sqft": 1139.78, "rental_yield_pct": 4.87}, {"id": 180, "notes": null, "unit_no": "4004", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 817.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-4004-Honolulu-HI-96813/243927205_zpid/", "living_sqft": 652, "original_price": 699900.0, "est_rent_monthly": 3041.0, "current_list_price": 745000.0, "appreciation_pct": 6.44, "capital_gain": 45100.0, "price_per_sqft": 1142.64, "rental_yield_pct": 4.9}, {"id": 181, "notes": "https://www.zillow.com/homedetails/555-South-St-1807-Honolulu-HI-96813/243669331_zpid/", "unit_no": "807", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1087.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-807-Honolulu-HI-96813/250257433_zpid/", "living_sqft": 974, "original_price": 626800.0, "est_rent_monthly": 3740.0, "current_list_price": 859000.0, "appreciation_pct": 37.05, "capital_gain": 232200.0, "price_per_sqft": 881.93, "rental_yield_pct": 5.22}, {"id": 182, "notes": null, "unit_no": "3902", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1283.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3902-Honolulu-HI-96813/243927194_zpid/", "living_sqft": 930, "original_price": 801800.0, "est_rent_monthly": 3593.0, "current_list_price": 930000.0, "appreciation_pct": 15.99, "capital_gain": 128200.0, "price_per_sqft": 1000.0, "rental_yield_pct": 4.64}, {"id": 183, "notes": null, "unit_no": "1305", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1598.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-1305-Honolulu-HI-96813/243595332_zpid/", "living_sqft": 1346, "original_price": 907900.0, "est_rent_monthly": 4761.0, "current_list_price": 1325000.0, "appreciation_pct": 45.94, "capital_gain": 417100.0, "price_per_sqft": 984.4, "rental_yield_pct": 4.31}, {"id": 184, "notes": null, "unit_no": "4305", "unit_type": "3BR(PH)", "view_type": "Ocean", "hoa_monthly": 1655.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-PENTHOUSE-4305-Honolulu-HI-96813/461533159_zpid/", "living_sqft": 1397, "original_price": 1426539.0, "est_rent_monthly": 4974.0, "current_list_price": 1800000.0, "appreciation_pct": 26.18, "capital_gain": 373461.0, "price_per_sqft": 1288.48, "rental_yield_pct": 3.32}], "unit_count": 6}, {"building_name": "Alia", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2961473, "longitude": -157.8589112, "notes": "888 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Kaliu", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2971482, "longitude": -157.860788, "notes": "728 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Kahuina", "neighborhood": "Salt", "year_completed": 2028, "status": "under_construction", "latitude": 21.29832946, "longitude": -157.8596649, "notes": "450 Cooke Street, Honolulu, HI 96813", "units": [], "unit_count": 0}];
+    const towersData = [{"building_name": "Symphony Honolulu", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.3000285, "longitude": -157.8526384, "notes": "888 Kapiolani Blvd.", "units": [{"id": 185, "notes": null, "unit_no": "2001", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 803.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2001-Honolulu-HI-96813/121872151_zpid/", "living_sqft": 672, "original_price": 401700.0, "est_rent_monthly": 3104.0, "current_list_price": 805000.0, "appreciation_pct": 100.4, "capital_gain": 403300.0, "price_per_sqft": 1197.92, "rental_yield_pct": 4.63}, {"id": 186, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3410-Honolulu-HI-96813/121876322_zpid/", "unit_no": "2703", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1383.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2703-Honolulu-HI-96813/121876808_zpid/", "living_sqft": 1142, "original_price": 1047800.0, "est_rent_monthly": 4503.0, "current_list_price": 1280000.0, "appreciation_pct": 22.16, "capital_gain": 232200.0, "price_per_sqft": 1120.84, "rental_yield_pct": 4.22}, {"id": 188, "notes": null, "unit_no": "1709", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1759.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-1709-Honolulu-HI-96813/121871143_zpid/", "living_sqft": 1454, "original_price": 1088000.0, "est_rent_monthly": 6195.0, "current_list_price": 1600000.0, "appreciation_pct": 47.06, "capital_gain": 512000.0, "price_per_sqft": 1100.41, "rental_yield_pct": 4.65}, {"id": 189, "notes": null, "unit_no": "3505", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1837.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3505-Honolulu-HI-96813/121876629_zpid/", "living_sqft": 1520, "original_price": 1490000.0, "est_rent_monthly": 6417.0, "current_list_price": 1865000.0, "appreciation_pct": 25.17, "capital_gain": 375000.0, "price_per_sqft": 1226.97, "rental_yield_pct": 4.13}, {"id": 190, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 187, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3910-Honolulu-HI-96813/121870994_zpid/", "unit_no": "4505", "unit_type": "2BR(PH)", "view_type": "Ocean", "hoa_monthly": 1546.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-4505-Honolulu-HI-96813/121870552_zpid/", "living_sqft": 1278, "original_price": 1725000.0, "est_rent_monthly": 5800.0, "current_list_price": 1400000.0, "appreciation_pct": -18.84, "capital_gain": -325000.0, "price_per_sqft": 1095.46, "rental_yield_pct": 4.97}], "unit_count": 6}, {"building_name": "The Collection", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.29934627, "longitude": -157.8623146, "notes": "600 Ala Moana Blvd.", "units": [{"id": 173, "notes": null, "unit_no": "3604", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 681.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3604-Honolulu-HI-96813/121871779_zpid/", "living_sqft": 580, "original_price": 500631.0, "est_rent_monthly": 3284.0, "current_list_price": 775000.0, "appreciation_pct": 54.8, "capital_gain": 274369.0, "price_per_sqft": 1336.21, "rental_yield_pct": 5.08}, {"id": 174, "notes": null, "unit_no": "508", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 821.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-508-Honolulu-HI-96813/121871013_zpid/", "living_sqft": 700, "original_price": 459000.0, "est_rent_monthly": 3737.0, "current_list_price": 825000.0, "appreciation_pct": 79.74, "capital_gain": 366000.0, "price_per_sqft": 1178.57, "rental_yield_pct": 5.44}, {"id": 175, "notes": null, "unit_no": "2806", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1031.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2806-Honolulu-HI-96813/121876299_zpid/", "living_sqft": 879, "original_price": 728634.0, "est_rent_monthly": 4519.0, "current_list_price": 1199000.0, "appreciation_pct": 64.55, "capital_gain": 470366.0, "price_per_sqft": 1364.05, "rental_yield_pct": 4.52}, {"id": 176, "notes": null, "unit_no": "2402", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1215.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2402-Honolulu-HI-96813/121874152_zpid/", "living_sqft": 1036, "original_price": 819483.0, "est_rent_monthly": 5090.0, "current_list_price": 1325000.0, "appreciation_pct": 61.69, "capital_gain": 505517.0, "price_per_sqft": 1278.96, "rental_yield_pct": 4.61}, {"id": 177, "notes": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3101-Honolulu-HI-96813/121874995_zpid/", "unit_no": "2801", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1330.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2801-Honolulu-HI-96813/121871733_zpid/", "living_sqft": 1133, "original_price": 951921.0, "est_rent_monthly": 5481.0, "current_list_price": 1449000.0, "appreciation_pct": 52.22, "capital_gain": 497079.0, "price_per_sqft": 1278.91, "rental_yield_pct": 4.54}, {"id": 178, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 6}, {"building_name": "Keauhou Place", "neighborhood": "Salt", "year_completed": 2017, "status": "completed", "latitude": 21.30159788, "longitude": -157.8601304, "notes": "555 South St.", "units": [{"id": 179, "notes": null, "unit_no": "3409", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 738.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3409-Honolulu-HI-96813/243811934_zpid/", "living_sqft": 636, "original_price": 565800.0, "est_rent_monthly": 2939.0, "current_list_price": 724900.0, "appreciation_pct": 28.12, "capital_gain": 159100.0, "price_per_sqft": 1139.78, "rental_yield_pct": 4.87}, {"id": 180, "notes": null, "unit_no": "4004", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 817.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-4004-Honolulu-HI-96813/243927205_zpid/", "living_sqft": 652, "original_price": 699900.0, "est_rent_monthly": 3041.0, "current_list_price": 745000.0, "appreciation_pct": 6.44, "capital_gain": 45100.0, "price_per_sqft": 1142.64, "rental_yield_pct": 4.9}, {"id": 181, "notes": "https://www.zillow.com/homedetails/555-South-St-1807-Honolulu-HI-96813/243669331_zpid/", "unit_no": "807", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1087.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-807-Honolulu-HI-96813/250257433_zpid/", "living_sqft": 974, "original_price": 626800.0, "est_rent_monthly": 3740.0, "current_list_price": 859000.0, "appreciation_pct": 37.05, "capital_gain": 232200.0, "price_per_sqft": 881.93, "rental_yield_pct": 5.22}, {"id": 182, "notes": null, "unit_no": "3902", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1283.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3902-Honolulu-HI-96813/243927194_zpid/", "living_sqft": 930, "original_price": 801800.0, "est_rent_monthly": 3593.0, "current_list_price": 930000.0, "appreciation_pct": 15.99, "capital_gain": 128200.0, "price_per_sqft": 1000.0, "rental_yield_pct": 4.64}, {"id": 183, "notes": null, "unit_no": "1305", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1598.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-1305-Honolulu-HI-96813/243595332_zpid/", "living_sqft": 1346, "original_price": 907900.0, "est_rent_monthly": 4761.0, "current_list_price": 1325000.0, "appreciation_pct": 45.94, "capital_gain": 417100.0, "price_per_sqft": 984.4, "rental_yield_pct": 4.31}, {"id": 184, "notes": null, "unit_no": "4305", "unit_type": "3BR(PH)", "view_type": "Ocean", "hoa_monthly": 1655.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-PENTHOUSE-4305-Honolulu-HI-96813/461533159_zpid/", "living_sqft": 1397, "original_price": 1426539.0, "est_rent_monthly": 4974.0, "current_list_price": 1800000.0, "appreciation_pct": 26.18, "capital_gain": 373461.0, "price_per_sqft": 1288.48, "rental_yield_pct": 3.32}], "unit_count": 6}, {"building_name": "Kaliu", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2971482, "longitude": -157.860788, "notes": "728 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Alia", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2961473, "longitude": -157.8589112, "notes": "888 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Kahuina", "neighborhood": "Salt", "year_completed": 2028, "status": "under_construction", "latitude": 21.29832946, "longitude": -157.8596649, "notes": "450 Cooke Street, Honolulu, HI 96813", "units": [], "unit_count": 0}];
     const REGION_COLORS = {"Ward Village": "#3B82F6", "Waikiki": "#A855F7", "Ala Moana": "#F97316", "Salt": "#10B981"};
 
     const TOWER_ABBR = {
@@ -1185,11 +1239,27 @@
 
       const regionBadge = `<span class="popup-tower-region" style="background: ${regionColor};">${regionLabel}</span>`;
 
+      // 콘도 레벨 경고 박스 (notes에 플래그 있으면 표시)
+      let towerWarning = "";
+      const towerNotes = tower.notes || "";
+      if (towerNotes.includes("[leasehold-converted]")) {
+        towerWarning = `
+          <div class="popup-tower-warning">
+            <span class="popup-tower-warning-icon">⚠️</span>
+            <strong>리스홀드 → 피심플 전환 콘도</strong><br>
+            분양 당시는 리스홀드(Leasehold, 토지 임대권) 상태였으며,
+            현재 매물 중 상당수는 피심플(Fee Simple, 토지 소유권)로 전환된 unit입니다.
+            표시된 누적 상승률에는 시장 시세 변동 외에 <strong>소유권 형태 전환 효과</strong>가 포함되어 있습니다.
+          </div>
+        `;
+      }
+
       if (!tower.units || tower.units.length === 0) {
         return `
           ${regionBadge}
           <h3 class="popup-tower-name">${tower.building_name}</h3>
           <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel}</p>
+          ${towerWarning}
           <div class="popup-no-data">
             <span class="popup-no-data-icon">📋</span>
             아직 매물 정보가 등록되지 않았습니다.
@@ -1243,6 +1313,7 @@
         ${regionBadge}
         <h3 class="popup-tower-name">${tower.building_name}</h3>
         <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        ${towerWarning}
         ${noteHTML}
         <table class="popup-table">
           <thead><tr>${headerCells}</tr></thead>

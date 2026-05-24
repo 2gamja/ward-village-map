@@ -209,6 +209,39 @@
       font-size: 10px;
       font-weight: 700;
       cursor: help;
+      position: relative;
+    }
+    .seg-info:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #333;
+      color: white;
+      font-size: 11px;
+      font-weight: normal;
+      line-height: 1.5;
+      width: 320px;
+      white-space: normal;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 2000;
+      pointer-events: none;
+      text-align: left;
+    }
+    .seg-info:hover::before {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 2px;
+      border: 4px solid transparent;
+      border-bottom-color: #333;
+      z-index: 2000;
     }
     .seg-metrics {
       display: flex;
@@ -570,6 +603,27 @@
       display: inline-block;
       margin-right: 4px;
     }
+
+    /* 콘도 레벨 경고 박스 (리스홀드 전환 등) */
+    .popup-tower-warning {
+      margin: 8px 0 12px 0;
+      padding: 8px 12px;
+      background: #FFF3CD;
+      border-left: 3px solid #FFB300;
+      border-radius: 3px;
+      font-size: 10.5px;
+      color: #6B4F00;
+      line-height: 1.5;
+    }
+    .popup-tower-warning strong {
+      color: #4A3700;
+      font-weight: 700;
+    }
+    .popup-tower-warning-icon {
+      display: inline-block;
+      margin-right: 4px;
+      font-size: 12px;
+    }
     .popup-table {
       border-collapse: collapse;
       width: 100%;
@@ -913,7 +967,7 @@
         </div>
       </div>
       <div class="insights-segment insights-luxury">
-        <div class="seg-label">럭셔리 시장 <span class="seg-count">(10/13)</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">(10/13)</span> <span class="seg-info" data-tooltip="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
         <div class="seg-metrics">
           
           <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+20.1%</span></span>
@@ -1241,11 +1295,27 @@
 
       const regionBadge = `<span class="popup-tower-region" style="background: ${regionColor};">${regionLabel}</span>`;
 
+      // 콘도 레벨 경고 박스 (notes에 플래그 있으면 표시)
+      let towerWarning = "";
+      const towerNotes = tower.notes || "";
+      if (towerNotes.includes("[leasehold-converted]")) {
+        towerWarning = `
+          <div class="popup-tower-warning">
+            <span class="popup-tower-warning-icon">⚠️</span>
+            <strong>리스홀드 → 피심플 전환 콘도</strong><br>
+            분양 당시는 리스홀드(Leasehold, 토지 임대권) 상태였으며,
+            현재 매물 중 상당수는 피심플(Fee Simple, 토지 소유권)로 전환된 unit입니다.
+            표시된 누적 상승률에는 시장 시세 변동 외에 <strong>소유권 형태 전환 효과</strong>가 포함되어 있습니다.
+          </div>
+        `;
+      }
+
       if (!tower.units || tower.units.length === 0) {
         return `
           ${regionBadge}
           <h3 class="popup-tower-name">${tower.building_name}</h3>
           <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel}</p>
+          ${towerWarning}
           <div class="popup-no-data">
             <span class="popup-no-data-icon">📋</span>
             아직 매물 정보가 등록되지 않았습니다.
@@ -1299,6 +1369,7 @@
         ${regionBadge}
         <h3 class="popup-tower-name">${tower.building_name}</h3>
         <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        ${towerWarning}
         ${noteHTML}
         <table class="popup-table">
           <thead><tr>${headerCells}</tr></thead>

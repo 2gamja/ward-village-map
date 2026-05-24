@@ -36,3 +36,6 @@ test_query.py
 test_units.py
 debug_query.py
 
+# 백업 / 임시 파일
+*.bak
+*.j2.txt

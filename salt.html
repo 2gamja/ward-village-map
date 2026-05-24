@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page_title }}</title>
+  <title>솔트 시세맵</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -866,64 +866,59 @@
   <header>
     <div class="header-top">
       <div class="header-title">
-        <h1>{{ page_title }}</h1>
-        <div class="subtitle">{{ page_subtitle }}</div>
+        <h1>솔트 시세맵</h1>
+        <div class="subtitle">Our Kakaako Increment I (완공) + II (분양 중)</div>
       </div>
       <div class="tabs">
         <button class="tab-btn active" data-mode="appreciation">누적 상승률</button>
         <button class="tab-btn" data-mode="yield">연 임대수익률</button>
       </div>
-      <div class="header-meta">{{ total_towers }}개 콘도 · {{ total_units }}개 매물 · {{ build_timestamp[:10] }}</div>
+      <div class="header-meta">6개 콘도 · 18개 매물 · 2026-05-24</div>
     </div>
 
     <!-- 지역 네비게이션 -->
     <nav class="region-nav">
-      <a href="index.html" class="region-nav-item {% if current_nav == 'all' %}active{% endif %}">
+      <a href="index.html" class="region-nav-item ">
         전체
       </a>
-      <a href="ward-village.html" class="region-nav-item {% if current_nav == 'ward-village' %}active{% endif %}">
-        <span class="nav-dot" style="background: {{ region_colors['Ward Village'] }};"></span>워드빌리지
+      <a href="ward-village.html" class="region-nav-item ">
+        <span class="nav-dot" style="background: #3B82F6;"></span>워드빌리지
       </a>
-      <a href="waikiki.html" class="region-nav-item {% if current_nav == 'waikiki' %}active{% endif %}">
-        <span class="nav-dot" style="background: {{ region_colors['Waikiki'] }};"></span>와이키키
+      <a href="waikiki.html" class="region-nav-item ">
+        <span class="nav-dot" style="background: #A855F7;"></span>와이키키
       </a>
-      <a href="ala-moana.html" class="region-nav-item {% if current_nav == 'ala-moana' %}active{% endif %}">
-        <span class="nav-dot" style="background: {{ region_colors['Ala Moana'] }};"></span>알라모아나
+      <a href="ala-moana.html" class="region-nav-item ">
+        <span class="nav-dot" style="background: #F97316;"></span>알라모아나
       </a>
-      <a href="salt.html" class="region-nav-item {% if current_nav == 'salt' %}active{% endif %}">
-        <span class="nav-dot" style="background: {{ region_colors['Salt'] }};"></span>솔트
+      <a href="salt.html" class="region-nav-item active">
+        <span class="nav-dot" style="background: #10B981;"></span>솔트
       </a>
     </nav>
   </header>
 
   <!-- 인사이트 패널 -->
-  {% set s = stats %}
+  
   <div class="insights-panel">
     <div class="insights-row insights-summary">
       <div class="insights-segment">
-        <div class="seg-label">전체 시장 <span class="seg-count">({{ s.overall.listed_units }}/{{ s.overall.total_units }})</span></div>
+        <div class="seg-label">전체 시장 <span class="seg-count">(16/18)</span></div>
         <div class="seg-metrics">
-          {% if s.overall.avg_appreciation_pct is not none %}
-          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.overall.avg_appreciation_pct) }}%</span></span>
+          
+          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+40.5%</span></span>
           <span class="metric-sep">·</span>
-          {% endif %}
-          {% if s.overall.avg_yield_pct is not none %}
-          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.overall.avg_yield_pct) }}%</span></span>
-          {% endif %}
+          
+          
+          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">4.63%</span></span>
+          
         </div>
       </div>
       <div class="insights-segment insights-luxury">
-        <div class="seg-label">럭셔리 시장 <span class="seg-count">({{ s.luxury.listed_units }}/{{ s.luxury.total_units }})</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">(0/0)</span> <span class="seg-info" title="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
         <div class="seg-metrics">
-          {% if s.luxury.avg_appreciation_pct is not none %}
-          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">{{ "%+.1f"|format(s.luxury.avg_appreciation_pct) }}%</span></span>
-          <span class="metric-sep">·</span>
-          {% endif %}
-          {% if s.luxury.avg_yield_pct is not none %}
-          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">{{ "%.2f"|format(s.luxury.avg_yield_pct) }}%</span></span>
-          {% else %}
+          
+          
           <span class="metric-label" style="font-style: italic;">럭셔리 데이터 없음</span>
-          {% endif %}
+          
         </div>
       </div>
     </div>
@@ -936,56 +931,38 @@
     <div class="insights-row insights-toplist" id="insights-toplist">
       <div class="insights-segment">
         <div class="top-title">🏆 자본 차익 TOP</div>
-        {% if s.overall.top_appreciation %}
+        
         <div class="top-row">
           <span class="top-scope">전체</span>
-          <span class="top-unit">{{ s.overall.top_appreciation.building_name }} {{ s.overall.top_appreciation.unit_type }} {{ s.overall.top_appreciation.unit_no }}</span>
-          <span class="top-value positive">{{ "%+.1f"|format(s.overall.top_appreciation.value) }}%</span>
+          <span class="top-unit">Symphony Honolulu 1BR 2001</span>
+          <span class="top-value positive">+100.4%</span>
         </div>
-        {% endif %}
-        {% if s.luxury.top_appreciation %}
-        <div class="top-row">
-          <span class="top-scope">럭셔리</span>
-          <span class="top-unit">{{ s.luxury.top_appreciation.building_name }} {{ s.luxury.top_appreciation.unit_type }} {{ s.luxury.top_appreciation.unit_no }}</span>
-          <span class="top-value positive">{{ "%+.1f"|format(s.luxury.top_appreciation.value) }}%</span>
-        </div>
-        {% endif %}
+        
+        
       </div>
 
       <div class="insights-segment">
         <div class="top-title">💰 임대 수익률 TOP</div>
-        {% if s.overall.top_yield %}
+        
         <div class="top-row">
           <span class="top-scope">전체</span>
-          <span class="top-unit">{{ s.overall.top_yield.building_name }} {{ s.overall.top_yield.unit_type }} {{ s.overall.top_yield.unit_no }}</span>
-          <span class="top-value yield">{{ "%.2f"|format(s.overall.top_yield.value) }}%</span>
+          <span class="top-unit">The Collection 1BR 508</span>
+          <span class="top-value yield">5.44%</span>
         </div>
-        {% endif %}
-        {% if s.luxury.top_yield %}
-        <div class="top-row">
-          <span class="top-scope">럭셔리</span>
-          <span class="top-unit">{{ s.luxury.top_yield.building_name }} {{ s.luxury.top_yield.unit_type }} {{ s.luxury.top_yield.unit_no }}</span>
-          <span class="top-value yield">{{ "%.2f"|format(s.luxury.top_yield.value) }}%</span>
-        </div>
-        {% endif %}
+        
+        
       </div>
 
       <div class="insights-segment">
         <div class="top-title">📉 자본 차익 BOTTOM</div>
-        {% if s.overall.bottom_appreciation %}
+        
         <div class="top-row">
           <span class="top-scope">전체</span>
-          <span class="top-unit">{{ s.overall.bottom_appreciation.building_name }} {{ s.overall.bottom_appreciation.unit_type }} {{ s.overall.bottom_appreciation.unit_no }}</span>
-          <span class="top-value negative">{{ "%+.1f"|format(s.overall.bottom_appreciation.value) }}%</span>
+          <span class="top-unit">Symphony Honolulu 2BR(PH) 4505</span>
+          <span class="top-value negative">-18.8%</span>
         </div>
-        {% endif %}
-        {% if s.luxury.bottom_appreciation %}
-        <div class="top-row">
-          <span class="top-scope">럭셔리</span>
-          <span class="top-unit">{{ s.luxury.bottom_appreciation.building_name }} {{ s.luxury.bottom_appreciation.unit_type }} {{ s.luxury.bottom_appreciation.unit_no }}</span>
-          <span class="top-value negative">{{ "%+.1f"|format(s.luxury.bottom_appreciation.value) }}%</span>
-        </div>
-        {% endif %}
+        
+        
       </div>
     </div>
   </div>
@@ -999,42 +976,71 @@
       <span class="legend-toggle">▼</span>
     </div>
     <div class="legend-content">
-      {% set regions_order = ['Ward Village', 'Waikiki', 'Ala Moana', 'Salt'] %}
-      {% set region_labels = {'Ward Village': '워드빌리지', 'Waikiki': '와이키키', 'Ala Moana': '알라모아나', 'Salt': '솔트'} %}
       
-      {% for region in regions_order %}
-        {% set region_towers = towers | selectattr("neighborhood", "equalto", region) | list %}
-        {% if region_towers %}
+      
+      
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
         <div class="legend-region-group">
           <div class="legend-region-title">
-            <span class="legend-region-dot" style="background: {{ region_colors[region] }};"></span>
-            {{ region_labels[region] }} ({{ region_towers | length }})
+            <span class="legend-region-dot" style="background: #10B981;"></span>
+            솔트 (6)
           </div>
           
-          {% set completed = region_towers | selectattr("status", "equalto", "completed") | list %}
-          {% set construction = region_towers | selectattr("status", "equalto", "under_construction") | list %}
           
-          {% if completed %}
-          {% for t in completed | sort(attribute="year_completed") %}
+          
+          
+          
+          
           <div class="legend-item">
-            <span class="legend-marker" style="background: {{ region_colors[region] }};">{{ tower_abbr.get(t.building_name, '??') }}</span>
-            {{ t.building_name }} ({{ t.year_completed }})
+            <span class="legend-marker" style="background: #10B981;">SY</span>
+            Symphony Honolulu (2016)
           </div>
-          {% endfor %}
-          {% endif %}
           
-          {% if construction %}
+          <div class="legend-item">
+            <span class="legend-marker" style="background: #10B981;">TC</span>
+            The Collection (2016)
+          </div>
+          
+          <div class="legend-item">
+            <span class="legend-marker" style="background: #10B981;">KP</span>
+            Keauhou Place (2017)
+          </div>
+          
+          
+          
+          
           <div class="legend-status-divider">완공 예정</div>
-          {% for t in construction | sort(attribute="year_completed") %}
+          
           <div class="legend-item">
-            <span class="legend-marker under-construction" style="background: {{ region_colors[region] }};">{{ tower_abbr.get(t.building_name, '??') }}</span>
-            {{ t.building_name }} ({{ t.year_completed }})
+            <span class="legend-marker under-construction" style="background: #10B981;">AA</span>
+            Alia (2027)
           </div>
-          {% endfor %}
-          {% endif %}
+          
+          <div class="legend-item">
+            <span class="legend-marker under-construction" style="background: #10B981;">KU</span>
+            Kaliu (2027)
+          </div>
+          
+          <div class="legend-item">
+            <span class="legend-marker under-construction" style="background: #10B981;">KH</span>
+            Kahuina (2028)
+          </div>
+          
+          
         </div>
-        {% endif %}
-      {% endfor %}
+        
+      
     </div>
   </div>
 
@@ -1057,7 +1063,7 @@
       <div class="disclaimer-section">
         <div class="disclaimer-section-title">업데이트</div>
         <div class="disclaimer-section-content">
-          마지막 데이터 갱신: {{ build_timestamp[:10] }}<br>
+          마지막 데이터 갱신: 2026-05-24<br>
           매주 주기적 업데이트 예정
         </div>
       </div>
@@ -1074,8 +1080,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    const towersData = {{ towers_json | safe }};
-    const REGION_COLORS = {{ region_colors_json | safe }};
+    const towersData = [{"building_name": "Symphony Honolulu", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.3000285, "longitude": -157.8526384, "notes": "888 Kapiolani Blvd.", "units": [{"id": 185, "notes": null, "unit_no": "2001", "unit_type": "1BR", "view_type": "City", "hoa_monthly": 803.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2001-Honolulu-HI-96813/121872151_zpid/", "living_sqft": 672, "original_price": 401700.0, "est_rent_monthly": 3104.0, "current_list_price": 805000.0, "appreciation_pct": 100.4, "capital_gain": 403300.0, "price_per_sqft": 1197.92, "rental_yield_pct": 4.63}, {"id": 186, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3410-Honolulu-HI-96813/121876322_zpid/", "unit_no": "2703", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1383.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-2703-Honolulu-HI-96813/121876808_zpid/", "living_sqft": 1142, "original_price": 1047800.0, "est_rent_monthly": 4503.0, "current_list_price": 1280000.0, "appreciation_pct": 22.16, "capital_gain": 232200.0, "price_per_sqft": 1120.84, "rental_yield_pct": 4.22}, {"id": 188, "notes": null, "unit_no": "1709", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1759.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-1709-Honolulu-HI-96813/121871143_zpid/", "living_sqft": 1454, "original_price": 1088000.0, "est_rent_monthly": 6195.0, "current_list_price": 1600000.0, "appreciation_pct": 47.06, "capital_gain": 512000.0, "price_per_sqft": 1100.41, "rental_yield_pct": 4.65}, {"id": 189, "notes": null, "unit_no": "3505", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1837.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3505-Honolulu-HI-96813/121876629_zpid/", "living_sqft": 1520, "original_price": 1490000.0, "est_rent_monthly": 6417.0, "current_list_price": 1865000.0, "appreciation_pct": 25.17, "capital_gain": 375000.0, "price_per_sqft": 1226.97, "rental_yield_pct": 4.13}, {"id": 190, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 187, "notes": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-3910-Honolulu-HI-96813/121870994_zpid/", "unit_no": "4505", "unit_type": "2BR(PH)", "view_type": "Ocean", "hoa_monthly": 1546.0, "listing_url": "https://www.zillow.com/homedetails/888-Kapiolani-Blvd-4505-Honolulu-HI-96813/121870552_zpid/", "living_sqft": 1278, "original_price": 1725000.0, "est_rent_monthly": 5800.0, "current_list_price": 1400000.0, "appreciation_pct": -18.84, "capital_gain": -325000.0, "price_per_sqft": 1095.46, "rental_yield_pct": 4.97}], "unit_count": 6}, {"building_name": "The Collection", "neighborhood": "Salt", "year_completed": 2016, "status": "completed", "latitude": 21.29934627, "longitude": -157.8623146, "notes": "600 Ala Moana Blvd.", "units": [{"id": 173, "notes": null, "unit_no": "3604", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 681.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3604-Honolulu-HI-96813/121871779_zpid/", "living_sqft": 580, "original_price": 500631.0, "est_rent_monthly": 3284.0, "current_list_price": 775000.0, "appreciation_pct": 54.8, "capital_gain": 274369.0, "price_per_sqft": 1336.21, "rental_yield_pct": 5.08}, {"id": 174, "notes": null, "unit_no": "508", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 821.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-508-Honolulu-HI-96813/121871013_zpid/", "living_sqft": 700, "original_price": 459000.0, "est_rent_monthly": 3737.0, "current_list_price": 825000.0, "appreciation_pct": 79.74, "capital_gain": 366000.0, "price_per_sqft": 1178.57, "rental_yield_pct": 5.44}, {"id": 175, "notes": null, "unit_no": "2806", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1031.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2806-Honolulu-HI-96813/121876299_zpid/", "living_sqft": 879, "original_price": 728634.0, "est_rent_monthly": 4519.0, "current_list_price": 1199000.0, "appreciation_pct": 64.55, "capital_gain": 470366.0, "price_per_sqft": 1364.05, "rental_yield_pct": 4.52}, {"id": 176, "notes": null, "unit_no": "2402", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1215.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2402-Honolulu-HI-96813/121874152_zpid/", "living_sqft": 1036, "original_price": 819483.0, "est_rent_monthly": 5090.0, "current_list_price": 1325000.0, "appreciation_pct": 61.69, "capital_gain": 505517.0, "price_per_sqft": 1278.96, "rental_yield_pct": 4.61}, {"id": 177, "notes": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-3101-Honolulu-HI-96813/121874995_zpid/", "unit_no": "2801", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1330.0, "listing_url": "https://www.zillow.com/homedetails/600-Ala-Moana-Blvd-2801-Honolulu-HI-96813/121871733_zpid/", "living_sqft": 1133, "original_price": 951921.0, "est_rent_monthly": 5481.0, "current_list_price": 1449000.0, "appreciation_pct": 52.22, "capital_gain": 497079.0, "price_per_sqft": 1278.91, "rental_yield_pct": 4.54}, {"id": 178, "notes": null, "unit_no": null, "unit_type": "PH", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 6}, {"building_name": "Keauhou Place", "neighborhood": "Salt", "year_completed": 2017, "status": "completed", "latitude": 21.30159788, "longitude": -157.8601304, "notes": "555 South St.", "units": [{"id": 179, "notes": null, "unit_no": "3409", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 738.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3409-Honolulu-HI-96813/243811934_zpid/", "living_sqft": 636, "original_price": 565800.0, "est_rent_monthly": 2939.0, "current_list_price": 724900.0, "appreciation_pct": 28.12, "capital_gain": 159100.0, "price_per_sqft": 1139.78, "rental_yield_pct": 4.87}, {"id": 180, "notes": null, "unit_no": "4004", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 817.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-4004-Honolulu-HI-96813/243927205_zpid/", "living_sqft": 652, "original_price": 699900.0, "est_rent_monthly": 3041.0, "current_list_price": 745000.0, "appreciation_pct": 6.44, "capital_gain": 45100.0, "price_per_sqft": 1142.64, "rental_yield_pct": 4.9}, {"id": 181, "notes": "https://www.zillow.com/homedetails/555-South-St-1807-Honolulu-HI-96813/243669331_zpid/", "unit_no": "807", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1087.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-807-Honolulu-HI-96813/250257433_zpid/", "living_sqft": 974, "original_price": 626800.0, "est_rent_monthly": 3740.0, "current_list_price": 859000.0, "appreciation_pct": 37.05, "capital_gain": 232200.0, "price_per_sqft": 881.93, "rental_yield_pct": 5.22}, {"id": 182, "notes": null, "unit_no": "3902", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1283.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-3902-Honolulu-HI-96813/243927194_zpid/", "living_sqft": 930, "original_price": 801800.0, "est_rent_monthly": 3593.0, "current_list_price": 930000.0, "appreciation_pct": 15.99, "capital_gain": 128200.0, "price_per_sqft": 1000.0, "rental_yield_pct": 4.64}, {"id": 183, "notes": null, "unit_no": "1305", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1598.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-1305-Honolulu-HI-96813/243595332_zpid/", "living_sqft": 1346, "original_price": 907900.0, "est_rent_monthly": 4761.0, "current_list_price": 1325000.0, "appreciation_pct": 45.94, "capital_gain": 417100.0, "price_per_sqft": 984.4, "rental_yield_pct": 4.31}, {"id": 184, "notes": null, "unit_no": "4305", "unit_type": "3BR(PH)", "view_type": "Ocean", "hoa_monthly": 1655.0, "listing_url": "https://www.zillow.com/homedetails/555-South-St-PENTHOUSE-4305-Honolulu-HI-96813/461533159_zpid/", "living_sqft": 1397, "original_price": 1426539.0, "est_rent_monthly": 4974.0, "current_list_price": 1800000.0, "appreciation_pct": 26.18, "capital_gain": 373461.0, "price_per_sqft": 1288.48, "rental_yield_pct": 3.32}], "unit_count": 6}, {"building_name": "Alia", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2961473, "longitude": -157.8589112, "notes": "888 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Kaliu", "neighborhood": "Salt", "year_completed": 2027, "status": "under_construction", "latitude": 21.2971482, "longitude": -157.860788, "notes": "728 Ala Moana Blvd.", "units": [], "unit_count": 0}, {"building_name": "Kahuina", "neighborhood": "Salt", "year_completed": 2028, "status": "under_construction", "latitude": 21.29832946, "longitude": -157.8596649, "notes": "450 Cooke Street, Honolulu, HI 96813", "units": [], "unit_count": 0}];
+    const REGION_COLORS = {"Ward Village": "#3B82F6", "Waikiki": "#A855F7", "Ala Moana": "#F97316", "Salt": "#10B981"};
 
     const TOWER_ABBR = {
       // Ward Village

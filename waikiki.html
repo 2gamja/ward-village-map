@@ -459,6 +459,14 @@
       font-size: 11px;
       color: var(--color-text-primary);
     }
+    .legend-item.clickable {
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.12s;
+    }
+    .legend-item.clickable:hover {
+      background: rgba(155, 28, 46, 0.08);
+    }
     .legend-marker {
       display: inline-flex;
       align-items: center;
@@ -927,7 +935,7 @@
         <button class="tab-btn active" data-mode="appreciation">누적 상승률</button>
         <button class="tab-btn" data-mode="yield">연 임대수익률</button>
       </div>
-      <div class="header-meta">6개 콘도 · 26개 매물 · 2026-05-24</div>
+      <div class="header-meta">6개 콘도 · 15개 매물 · 2026-06-23</div>
     </div>
 
     <!-- 지역 네비게이션 -->
@@ -955,26 +963,26 @@
   <div class="insights-panel">
     <div class="insights-row insights-summary">
       <div class="insights-segment">
-        <div class="seg-label">전체 시장 <span class="seg-count">(24/26)</span></div>
+        <div class="seg-label">전체 시장 <span class="seg-count">(15/15)</span></div>
         <div class="seg-metrics">
           
-          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+69.7%</span></span>
+          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+40.6%</span></span>
           <span class="metric-sep">·</span>
           
           
-          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">3.70%</span></span>
+          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">4.06%</span></span>
           
         </div>
       </div>
       <div class="insights-segment insights-luxury">
-        <div class="seg-label">럭셔리 시장 <span class="seg-count">(5/6)</span> <span class="seg-info" data-tooltip="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
+        <div class="seg-label">럭셔리 시장 <span class="seg-count">(3/3)</span> <span class="seg-info" data-tooltip="3BR 이상 또는 PT/Villa 타입 · 면적 1,400sqft 이상 · 매물가 $2M 이상. 누적 상승률은 분양가 대비 현재 매물가 (콘도별 분양 연도 다름). 표본이 작아 단일 매물의 영향이 클 수 있음.">ⓘ</span></div>
         <div class="seg-metrics">
           
-          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+26.2%</span></span>
+          <span class="metric"><span class="metric-label">평균 누적 상승률</span> <span class="metric-value">+41.0%</span></span>
           <span class="metric-sep">·</span>
           
           
-          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">1.92%</span></span>
+          <span class="metric"><span class="metric-label">평균 연 수익률</span> <span class="metric-value">1.95%</span></span>
           
         </div>
       </div>
@@ -991,8 +999,8 @@
         
         <div class="top-row">
           <span class="top-scope">전체</span>
-          <span class="top-unit">Waikiki Beach Tower 2BR 1402</span>
-          <span class="top-value positive">+573.7%</span>
+          <span class="top-unit">Waikiki Banyan 1BR 2312</span>
+          <span class="top-value positive">+248.7%</span>
         </div>
         
         
@@ -1071,32 +1079,32 @@
           
           
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="Waikiki Banyan">
             <span class="legend-marker" style="background: #A855F7;">WB</span>
             Waikiki Banyan (1977)
           </div>
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="Waikiki Beach Tower">
             <span class="legend-marker" style="background: #A855F7;">WBT</span>
             Waikiki Beach Tower (1983)
           </div>
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="The Watermark">
             <span class="legend-marker" style="background: #A855F7;">WM</span>
             The Watermark (2008)
           </div>
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="Ka Lai Waikiki Beach">
             <span class="legend-marker" style="background: #A855F7;">KL</span>
             Ka Lai Waikiki Beach (2009)
           </div>
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="Allure Waikiki">
             <span class="legend-marker" style="background: #A855F7;">AL</span>
             Allure Waikiki (2009)
           </div>
           
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="Ritz-Carlton Residences Waikiki Beach">
             <span class="legend-marker" style="background: #A855F7;">RC</span>
             Ritz-Carlton Residences Waikiki Beach (2018)
           </div>
@@ -1135,7 +1143,7 @@
       <div class="disclaimer-section">
         <div class="disclaimer-section-title">업데이트</div>
         <div class="disclaimer-section-content">
-          마지막 데이터 갱신: 2026-05-24<br>
+          마지막 데이터 갱신: 2026-06-23<br>
           매주 주기적 업데이트 예정
         </div>
       </div>
@@ -1152,7 +1160,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    const towersData = [{"building_name": "Waikiki Banyan", "neighborhood": "Waikiki", "year_completed": 1977, "status": "completed", "latitude": 21.27446437, "longitude": -157.8213769, "notes": "201 Ohua Ave [leasehold-converted]", "units": [{"id": 140, "notes": null, "unit_no": "2312", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 1050.0, "listing_url": "https://www.zillow.com/homedetails/201-Ohua-Ave-2312-Honolulu-HI-96815/450604017_zpid/", "living_sqft": 533, "original_price": 225100.0, "est_rent_monthly": 2340.0, "current_list_price": 785000.0, "appreciation_pct": 248.73, "capital_gain": 559900.0, "price_per_sqft": 1472.8, "rental_yield_pct": 3.58}, {"id": 141, "notes": null, "unit_no": "3513", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 902.0, "listing_url": "https://www.zillow.com/homedetails/201-Ohua-Ave-3513-Honolulu-HI-96815/462204414_zpid/", "living_sqft": 594, "original_price": 195000.0, "est_rent_monthly": 2590.0, "current_list_price": 900000.0, "appreciation_pct": 361.54, "capital_gain": 705000.0, "price_per_sqft": 1515.15, "rental_yield_pct": 3.45}], "unit_count": 2}, {"building_name": "Waikiki Beach Tower", "neighborhood": "Waikiki", "year_completed": 1983, "status": "completed", "latitude": 21.27523997, "longitude": -157.8239761, "notes": "2470 Kalakaua Ave, Honolulu, HI [leasehold-converted]", "units": [{"id": 132, "notes": null, "unit_no": "504", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 3613.0, "listing_url": "https://www.zillow.com/homedetails/2470-Kalakaua-Ave-APT-504-Honolulu-HI-96815/82504972_zpid/", "living_sqft": 1092, "original_price": 320000.0, "est_rent_monthly": 4363.0, "current_list_price": 770000.0, "appreciation_pct": 140.62, "capital_gain": 450000.0, "price_per_sqft": 705.13, "rental_yield_pct": 6.8}, {"id": 133, "notes": null, "unit_no": "1402", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 3380.0, "listing_url": "https://www.zillow.com/homedetails/2470-Kalakaua-Ave-APT-1402-Honolulu-HI-96815/82516370_zpid/", "living_sqft": 1025, "original_price": 380000.0, "est_rent_monthly": 3968.0, "current_list_price": 2560000.0, "appreciation_pct": 573.68, "capital_gain": 2180000.0, "price_per_sqft": 2497.56, "rental_yield_pct": 1.86}], "unit_count": 2}, {"building_name": "The Watermark", "neighborhood": "Waikiki", "year_completed": 2008, "status": "completed", "latitude": 21.28731404, "longitude": -157.8380688, "notes": "1551 Ala Wai Blvd", "units": [{"id": 138, "notes": "https://www.zillow.com/homedetails/1551-Ala-Wai-Blvd-APT-401-Honolulu-HI-96815/82433486_zpid/", "unit_no": "401", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2002.0, "listing_url": "https://www.redfin.com/HI/Honolulu/1551-Ala-Wai-Blvd-96815/unit-401/home/63756539", "living_sqft": 1196, "original_price": 1050000.0, "est_rent_monthly": 5041.0, "current_list_price": 1079000.0, "appreciation_pct": 2.76, "capital_gain": 29000.0, "price_per_sqft": 902.17, "rental_yield_pct": 5.61}, {"id": 139, "notes": "https://www.zillow.com/homedetails/1551-Ala-Wai-Blvd-APT-3104-Honolulu-HI-96815/82384497_zpid/", "unit_no": "3104", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1834.0, "listing_url": "https://www.redfin.com/HI/Honolulu/1551-Ala-Wai-Blvd-96815/unit-3104/home/63757809", "living_sqft": 1112, "original_price": 1261874.0, "est_rent_monthly": 4717.0, "current_list_price": 1520000.0, "appreciation_pct": 20.46, "capital_gain": 258126.0, "price_per_sqft": 1366.91, "rental_yield_pct": 3.72}], "unit_count": 2}, {"building_name": "Ka Lai Waikiki Beach", "neighborhood": "Waikiki", "year_completed": 2009, "status": "completed", "latitude": 21.27944325, "longitude": -157.8321846, "notes": "223 Saratoga Rd, Honolulu, HI", "units": [{"id": 126, "notes": null, "unit_no": "2109", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 1215.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-2109-Honolulu-HI-96815/82447880_zpid/", "living_sqft": 545, "original_price": 1246000.0, "est_rent_monthly": 3216.0, "current_list_price": 850000.0, "appreciation_pct": -31.78, "capital_gain": -396000.0, "price_per_sqft": 1559.63, "rental_yield_pct": 4.54}, {"id": 127, "notes": null, "unit_no": "3008", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 2290.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3008-Honolulu-HI-96815/82457385_zpid/", "living_sqft": 1027, "original_price": 2088800.0, "est_rent_monthly": 5076.0, "current_list_price": 1700000.0, "appreciation_pct": -18.61, "capital_gain": -388800.0, "price_per_sqft": 1655.31, "rental_yield_pct": 3.58}, {"id": 128, "notes": null, "unit_no": "1619", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2970.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-1619-Honolulu-HI-96815/82437440_zpid/", "living_sqft": 1332, "original_price": 2688000.0, "est_rent_monthly": 6258.0, "current_list_price": 2985000.0, "appreciation_pct": 11.05, "capital_gain": 297000.0, "price_per_sqft": 2240.99, "rental_yield_pct": 2.52}, {"id": 130, "notes": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3710-Honolulu-HI-96815/82469870_zpid/", "unit_no": "3410", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 3899.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3410-Honolulu-HI-96815/82444273_zpid/", "living_sqft": 2050, "original_price": 3026000.0, "est_rent_monthly": 12500.0, "current_list_price": 4500000.0, "appreciation_pct": 48.71, "capital_gain": 1474000.0, "price_per_sqft": 2195.12, "rental_yield_pct": 3.33}, {"id": 131, "notes": null, "unit_no": null, "unit_type": "3BR(PH)", "view_type": "Ocean", "hoa_monthly": null, "listing_url": null, "living_sqft": null, "original_price": null, "est_rent_monthly": null, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}, {"id": 129, "notes": null, "unit_no": "3801", "unit_type": "2BR(PH)", "view_type": "Ocean", "hoa_monthly": 4807.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-PENTHOUSE-3801-Honolulu-HI-96815/442399626_zpid/", "living_sqft": 2156, "original_price": 5310000.0, "est_rent_monthly": 7898.0, "current_list_price": 9980000.0, "appreciation_pct": 87.95, "capital_gain": 4670000.0, "price_per_sqft": 4628.94, "rental_yield_pct": 0.95}], "unit_count": 6}, {"building_name": "Allure Waikiki", "neighborhood": "Waikiki", "year_completed": 2009, "status": "completed", "latitude": 21.2878068, "longitude": -157.8342967, "notes": "1837 Kalakaua Ave", "units": [{"id": 134, "notes": "recent_sold", "unit_no": "807", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 892.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-807-Honolulu-HI-96815/82507748_zpid/", "living_sqft": 833, "original_price": 550000.0, "est_rent_monthly": 3513.0, "current_list_price": 838000.0, "appreciation_pct": 52.36, "capital_gain": 288000.0, "price_per_sqft": 1006.0, "rental_yield_pct": 5.03}, {"id": 135, "notes": null, "unit_no": "2001", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1380.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-2001-Honolulu-HI-96815/82444553_zpid/", "living_sqft": 1216, "original_price": 600677.0, "est_rent_monthly": 5173.0, "current_list_price": 1075000.0, "appreciation_pct": 78.96, "capital_gain": 474323.0, "price_per_sqft": 884.05, "rental_yield_pct": 5.77}, {"id": 136, "notes": null, "unit_no": "3102", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 1234.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-3102-Honolulu-HI-96815/82447898_zpid/", "living_sqft": 1057, "original_price": 522126.0, "est_rent_monthly": 4538.0, "current_list_price": 1250000.0, "appreciation_pct": 139.41, "capital_gain": 727874.0, "price_per_sqft": 1182.59, "rental_yield_pct": 4.36}, {"id": 137, "notes": null, "unit_no": "2206", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 1887.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-2206-Honolulu-HI-96815/82478964_zpid/", "living_sqft": 1616, "original_price": 999900.0, "est_rent_monthly": 6803.0, "current_list_price": 1455000.0, "appreciation_pct": 45.51, "capital_gain": 455100.0, "price_per_sqft": 900.37, "rental_yield_pct": 5.61}], "unit_count": 4}, {"building_name": "Ritz-Carlton Residences Waikiki Beach", "neighborhood": "Waikiki", "year_completed": 2018, "status": "completed", "latitude": 21.28289553, "longitude": -157.8302887, "notes": "383 Kalaimoku St, Honolulu, HI", "units": [{"id": 117, "notes": null, "unit_no": "1508", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 1404.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-1508/home/91493104", "living_sqft": 511, "original_price": 799800.0, "est_rent_monthly": 3102.0, "current_list_price": 630000.0, "appreciation_pct": -21.23, "capital_gain": -169800.0, "price_per_sqft": 1232.88, "rental_yield_pct": 5.91}, {"id": 116, "notes": "https://www.zillow.com/homedetails/383-Kalaimoku-St-2001-Honolulu-HI-96815/241758080_zpid/", "unit_no": "1608", "unit_type": "Studio", "view_type": "Ocean", "hoa_monthly": 1374.0, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-1608/home/113643359", "living_sqft": 503, "original_price": 775800.0, "est_rent_monthly": 2878.0, "current_list_price": 648000.0, "appreciation_pct": -16.47, "capital_gain": -127800.0, "price_per_sqft": 1288.27, "rental_yield_pct": 5.33}, {"id": 119, "notes": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-D3102-Honolulu-HI-96815/2059791542_zpid/?spellCorrectedMetadata=%7B%22userQuery%22%3A%222139%20Kuhio%20Ave%20%23D3102%22%2C%22spellCorrectedQuery%22%3A%222139%20Kuhio%20Ave%20%23D3102%20Honolulu%2C%20HI%2096815%22%7D", "unit_no": "D3102", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 2326.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-D3102/home/184001741", "living_sqft": 846, "original_price": 1888800.0, "est_rent_monthly": 4745.0, "current_list_price": 1400000.0, "appreciation_pct": -25.88, "capital_gain": -488800.0, "price_per_sqft": 1654.85, "rental_yield_pct": 4.07}, {"id": 118, "notes": null, "unit_no": "E3002", "unit_type": "1BR", "view_type": "Ocean", "hoa_monthly": 2077.94, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-E3002/home/186517513", "living_sqft": 870, "original_price": 1629669.0, "est_rent_monthly": 3450.0, "current_list_price": 1520000.0, "appreciation_pct": -6.73, "capital_gain": -109669.0, "price_per_sqft": 1747.13, "rental_yield_pct": 2.72}, {"id": 120, "notes": null, "unit_no": "E2903", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 2784.0, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-E2903/home/175688250", "living_sqft": 1013, "original_price": 2115800.0, "est_rent_monthly": 3804.0, "current_list_price": 2200000.0, "appreciation_pct": 3.98, "capital_gain": 84200.0, "price_per_sqft": 2171.77, "rental_yield_pct": 2.07}, {"id": 121, "notes": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-2901-Honolulu-HI-96815/300182383_zpid/", "unit_no": "3602", "unit_type": "2BR", "view_type": "Ocean", "hoa_monthly": 3124.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-3602/home/91493020", "living_sqft": 1272, "original_price": 2998800.0, "est_rent_monthly": 5718.0, "current_list_price": 2498000.0, "appreciation_pct": -16.7, "capital_gain": -500800.0, "price_per_sqft": 1963.84, "rental_yield_pct": 2.75}, {"id": 123, "notes": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-3007-Honolulu-HI-96815/300182394_zpid/", "unit_no": "3007", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 4400.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-3007/home/91493000", "living_sqft": 1601, "original_price": 3658800.0, "est_rent_monthly": 6875.0, "current_list_price": 3200000.0, "appreciation_pct": -12.54, "capital_gain": -458800.0, "price_per_sqft": 1998.75, "rental_yield_pct": 2.58}, {"id": 122, "notes": null, "unit_no": "3307", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 5090.0, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-3307/home/108558643", "living_sqft": 1835, "original_price": 4593371.0, "est_rent_monthly": 5213.0, "current_list_price": 3958888.0, "appreciation_pct": -13.81, "capital_gain": -634483.0, "price_per_sqft": 2157.43, "rental_yield_pct": 1.58}, {"id": 124, "notes": null, "unit_no": "2806", "unit_type": "3BR", "view_type": "Ocean", "hoa_monthly": 6600.0, "listing_url": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-2806-Honolulu-HI-96815/300182381_zpid/", "living_sqft": 2557, "original_price": 6598800.0, "est_rent_monthly": 7689.0, "current_list_price": 7950000.0, "appreciation_pct": 20.48, "capital_gain": 1351200.0, "price_per_sqft": 3109.11, "rental_yield_pct": 1.16}, {"id": 125, "notes": null, "unit_no": "Ph-E", "unit_type": "3BR(PH)", "view_type": "Ocean", "hoa_monthly": 6008.0, "listing_url": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-2806-Honolulu-HI-96815/300182381_zpid/", "living_sqft": 4157, "original_price": 14499000.0, "est_rent_monthly": 10457.0, "current_list_price": null, "appreciation_pct": null, "capital_gain": null, "price_per_sqft": null, "rental_yield_pct": null}], "unit_count": 10}];
+    const towersData = [{"building_name": "Waikiki Banyan", "neighborhood": "Waikiki", "year_completed": 1977, "status": "completed", "latitude": 21.27446437, "longitude": -157.8213769, "notes": "201 Ohua Ave [leasehold-converted]", "units": [{"id": 140, "notes": null, "unit_no": "2312", "is_active": true, "last_seen": "2026-06-23", "unit_type": "1BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 1050.0, "listing_url": "https://www.zillow.com/homedetails/201-Ohua-Ave-2312-Honolulu-HI-96815/450604017_zpid/", "living_sqft": 533, "original_price": 225100.0, "est_rent_monthly": 2340.0, "current_list_price": 785000.0, "appreciation_pct": 248.73, "capital_gain": 559900.0, "price_per_sqft": 1472.8, "rental_yield_pct": 3.58, "is_stale": false, "as_of": null, "listing_count": 2}], "unit_count": 1, "active_listings": 2}, {"building_name": "Waikiki Beach Tower", "neighborhood": "Waikiki", "year_completed": 1983, "status": "completed", "latitude": 21.27523997, "longitude": -157.8239761, "notes": "2470 Kalakaua Ave, Honolulu, HI [leasehold-converted]", "units": [{"id": 132, "notes": null, "unit_no": "504", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 3613.0, "listing_url": "https://www.zillow.com/homedetails/2470-Kalakaua-Ave-APT-504-Honolulu-HI-96815/82504972_zpid/", "living_sqft": 1092, "original_price": 320000.0, "est_rent_monthly": 4363.0, "current_list_price": 770000.0, "appreciation_pct": 140.62, "capital_gain": 450000.0, "price_per_sqft": 705.13, "rental_yield_pct": 6.8, "is_stale": false, "as_of": null, "listing_count": 2}], "unit_count": 1, "active_listings": 2}, {"building_name": "The Watermark", "neighborhood": "Waikiki", "year_completed": 2008, "status": "completed", "latitude": 21.28731404, "longitude": -157.8380688, "notes": "1551 Ala Wai Blvd", "units": [{"id": 138, "notes": "https://www.zillow.com/homedetails/1551-Ala-Wai-Blvd-APT-401-Honolulu-HI-96815/82433486_zpid/", "unit_no": "401", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 2002.0, "listing_url": "https://www.redfin.com/HI/Honolulu/1551-Ala-Wai-Blvd-96815/unit-401/home/63756539", "living_sqft": 1196, "original_price": 1050000.0, "est_rent_monthly": 5041.0, "current_list_price": 1079000.0, "appreciation_pct": 2.76, "capital_gain": 29000.0, "price_per_sqft": 902.17, "rental_yield_pct": 5.61, "is_stale": false, "as_of": null, "listing_count": 2}], "unit_count": 1, "active_listings": 2}, {"building_name": "Ka Lai Waikiki Beach", "neighborhood": "Waikiki", "year_completed": 2009, "status": "completed", "latitude": 21.27944325, "longitude": -157.8321846, "notes": "223 Saratoga Rd, Honolulu, HI", "units": [{"id": 126, "notes": null, "unit_no": "2109", "is_active": true, "last_seen": "2026-06-23", "unit_type": "Studio", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 1215.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-2109-Honolulu-HI-96815/82447880_zpid/", "living_sqft": 545, "original_price": 1246000.0, "est_rent_monthly": 3216.0, "current_list_price": 850000.0, "appreciation_pct": -31.78, "capital_gain": -396000.0, "price_per_sqft": 1559.63, "rental_yield_pct": 4.54, "is_stale": false, "as_of": null, "listing_count": 1}, {"id": 127, "notes": null, "unit_no": "3008", "is_active": true, "last_seen": "2026-06-23", "unit_type": "1BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 2290.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3008-Honolulu-HI-96815/82457385_zpid/", "living_sqft": 1027, "original_price": 2088800.0, "est_rent_monthly": 5076.0, "current_list_price": 1700000.0, "appreciation_pct": -18.61, "capital_gain": -388800.0, "price_per_sqft": 1655.31, "rental_yield_pct": 3.58, "is_stale": false, "as_of": null, "listing_count": 1}, {"id": 128, "notes": null, "unit_no": "1619", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 2970.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-1619-Honolulu-HI-96815/82437440_zpid/", "living_sqft": 1332, "original_price": 2688000.0, "est_rent_monthly": 6258.0, "current_list_price": 2985000.0, "appreciation_pct": 11.05, "capital_gain": 297000.0, "price_per_sqft": 2240.99, "rental_yield_pct": 2.52, "is_stale": false, "as_of": null, "listing_count": 1}, {"id": 130, "notes": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3710-Honolulu-HI-96815/82469870_zpid/", "unit_no": "3410", "is_active": true, "last_seen": "2026-06-23", "unit_type": "3BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 3899.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-3410-Honolulu-HI-96815/82444273_zpid/", "living_sqft": 2050, "original_price": 3026000.0, "est_rent_monthly": 12500.0, "current_list_price": 4500000.0, "appreciation_pct": 48.71, "capital_gain": 1474000.0, "price_per_sqft": 2195.12, "rental_yield_pct": 3.33, "is_stale": false, "as_of": null, "listing_count": 1}, {"id": 129, "notes": null, "unit_no": "3801", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR(PH)", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 4807.0, "listing_url": "https://www.zillow.com/homedetails/223-Saratoga-Rd-PENTHOUSE-3801-Honolulu-HI-96815/442399626_zpid/", "living_sqft": 2156, "original_price": 5310000.0, "est_rent_monthly": 7898.0, "current_list_price": 9980000.0, "appreciation_pct": 87.95, "capital_gain": 4670000.0, "price_per_sqft": 4628.94, "rental_yield_pct": 0.95, "is_stale": false, "as_of": null, "listing_count": 1}], "unit_count": 5, "active_listings": 5}, {"building_name": "Allure Waikiki", "neighborhood": "Waikiki", "year_completed": 2009, "status": "completed", "latitude": 21.2878068, "longitude": -157.8342967, "notes": "1837 Kalakaua Ave", "units": [{"id": 134, "notes": "recent_sold", "unit_no": "807", "is_active": true, "last_seen": "2026-06-23", "unit_type": "1BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 892.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-807-Honolulu-HI-96815/82507748_zpid/", "living_sqft": 833, "original_price": 550000.0, "est_rent_monthly": 3513.0, "current_list_price": 838000.0, "appreciation_pct": 52.36, "capital_gain": 288000.0, "price_per_sqft": 1006.0, "rental_yield_pct": 5.03, "is_stale": false, "as_of": null, "listing_count": 1}, {"id": 135, "notes": null, "unit_no": "2001", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 1380.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-2001-Honolulu-HI-96815/82444553_zpid/", "living_sqft": 1216, "original_price": 600677.0, "est_rent_monthly": 5173.0, "current_list_price": 1075000.0, "appreciation_pct": 78.96, "capital_gain": 474323.0, "price_per_sqft": 884.05, "rental_yield_pct": 5.77, "is_stale": false, "as_of": null, "listing_count": 2}, {"id": 137, "notes": null, "unit_no": "2206", "is_active": true, "last_seen": "2026-06-23", "unit_type": "3BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 1887.0, "listing_url": "https://www.zillow.com/homedetails/1837-Kalakaua-Ave-APT-2206-Honolulu-HI-96815/82478964_zpid/", "living_sqft": 1616, "original_price": 999900.0, "est_rent_monthly": 6803.0, "current_list_price": 1455000.0, "appreciation_pct": 45.51, "capital_gain": 455100.0, "price_per_sqft": 900.37, "rental_yield_pct": 5.61, "is_stale": false, "as_of": null, "listing_count": 1}], "unit_count": 3, "active_listings": 4}, {"building_name": "Ritz-Carlton Residences Waikiki Beach", "neighborhood": "Waikiki", "year_completed": 2018, "status": "completed", "latitude": 21.28289553, "longitude": -157.8302887, "notes": "383 Kalaimoku St, Honolulu, HI", "units": [{"id": 117, "notes": null, "unit_no": "1508", "is_active": true, "last_seen": "2026-06-23", "unit_type": "Studio", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 1404.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-1508/home/91493104", "living_sqft": 511, "original_price": 799800.0, "est_rent_monthly": 3102.0, "current_list_price": 630000.0, "appreciation_pct": -21.23, "capital_gain": -169800.0, "price_per_sqft": 1232.88, "rental_yield_pct": 5.91, "is_stale": false, "as_of": null, "listing_count": 2}, {"id": 119, "notes": "https://www.zillow.com/homedetails/2139-Kuhio-Ave-D3102-Honolulu-HI-96815/2059791542_zpid/?spellCorrectedMetadata=%7B%22userQuery%22%3A%222139%20Kuhio%20Ave%20%23D3102%22%2C%22spellCorrectedQuery%22%3A%222139%20Kuhio%20Ave%20%23D3102%20Honolulu%2C%20HI%2096815%22%7D", "unit_no": "D3102", "is_active": true, "last_seen": "2026-06-23", "unit_type": "1BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 2326.0, "listing_url": "https://www.redfin.com/HI/Honolulu/2139-Kuhio-Ave-96815/unit-D3102/home/184001741", "living_sqft": 846, "original_price": 1888800.0, "est_rent_monthly": 4745.0, "current_list_price": 1400000.0, "appreciation_pct": -25.88, "capital_gain": -488800.0, "price_per_sqft": 1654.85, "rental_yield_pct": 4.07, "is_stale": false, "as_of": null, "listing_count": 2}, {"id": 120, "notes": null, "unit_no": "E2903", "is_active": true, "last_seen": "2026-06-23", "unit_type": "2BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 2784.0, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-E2903/home/175688250", "living_sqft": 1013, "original_price": 2115800.0, "est_rent_monthly": 3804.0, "current_list_price": 2200000.0, "appreciation_pct": 3.98, "capital_gain": 84200.0, "price_per_sqft": 2171.77, "rental_yield_pct": 2.07, "is_stale": false, "as_of": null, "listing_count": 2}, {"id": 122, "notes": null, "unit_no": "3307", "is_active": true, "last_seen": "2026-06-23", "unit_type": "3BR", "view_type": "Ocean", "first_seen": "2026-06-23", "hoa_monthly": 5090.0, "listing_url": "https://www.redfin.com/HI/Honolulu/383-Kalaimoku-St-96815/unit-3307/home/108558643", "living_sqft": 1835, "original_price": 4593371.0, "est_rent_monthly": 5213.0, "current_list_price": 3958888.0, "appreciation_pct": -13.81, "capital_gain": -634483.0, "price_per_sqft": 2157.43, "rental_yield_pct": 1.58, "is_stale": false, "as_of": null, "listing_count": 3}], "unit_count": 4, "active_listings": 9}];
     const REGION_COLORS = {"Ward Village": "#3B82F6", "Waikiki": "#A855F7", "Ala Moana": "#F97316", "Salt": "#10B981"};
 
     const TOWER_ABBR = {
@@ -1298,7 +1306,7 @@
             <td>${u.unit_no || "-"}</td>
             <td>${fmtInt(u.living_sqft)}</td>
             <td>${fmtOriginalPrice(u.original_price, u.current_list_price)}</td>
-            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}</td>
+            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}${u.is_stale ? ' <span style="display:inline-block;margin-left:3px;padding:0 4px;font-size:10px;line-height:1.4;border-radius:3px;background:#FAF4E8;color:#6B4F2A;border:1px solid #C99A6B;" title="현재 활성 매물 없음' + (u.as_of ? ' · ' + u.as_of + ' 기준' : '') + '">직전 호가</span>' : ''}</td>
             <td>${fmtPct(u.appreciation_pct)}</td>
           </tr>
         `).join("");
@@ -1320,7 +1328,7 @@
             <td>${u.unit_type}</td>
             <td>${u.unit_no || "-"}</td>
             <td>${fmtInt(u.living_sqft)}</td>
-            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}</td>
+            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}${u.is_stale ? ' <span style="display:inline-block;margin-left:3px;padding:0 4px;font-size:10px;line-height:1.4;border-radius:3px;background:#FAF4E8;color:#6B4F2A;border:1px solid #C99A6B;" title="현재 활성 매물 없음' + (u.as_of ? ' · ' + u.as_of + ' 기준' : '') + '">직전 호가</span>' : ''}</td>
             <td>${fmtMoney(u.est_rent_monthly)}</td>
             <td>${fmtYield(u.rental_yield_pct)}</td>
           </tr>
@@ -1330,7 +1338,7 @@
       return `
         ${regionBadge}
         <h3 class="popup-tower-name">${tower.building_name}</h3>
-        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 타입${tower.active_listings != null ? ' · 매물 ' + tower.active_listings + '건' : ''}</p>
         ${towerWarning}
         ${noteHTML}
         <table class="popup-table">
@@ -1394,6 +1402,18 @@
       document.getElementById("legend").classList.toggle("expanded");
     });
 
+    // 범례에서 콘도 이름 클릭 → 해당 마커로 이동 + 팝업 열기
+    document.querySelectorAll(".legend-item.clickable").forEach(item => {
+      item.addEventListener("click", () => {
+        const marker = markerMap[item.dataset.building];
+        if (!marker) return;
+        document.getElementById("legend").classList.remove("expanded"); // 모바일에서 지도 보이게
+        const targetZoom = Math.max(map.getZoom(), 16);
+        map.flyTo(marker.getLatLng(), targetZoom, { duration: 0.6 });
+        map.once("moveend", () => marker.openPopup());
+      });
+    });
+
     document.getElementById("insights-toggle").addEventListener("click", () => {
       document.getElementById("insights-toggle").classList.toggle("expanded");
       document.getElementById("insights-toplist").classList.toggle("expanded");
@@ -1402,3 +1422,4 @@
 
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                  

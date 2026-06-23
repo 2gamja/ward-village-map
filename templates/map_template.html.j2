@@ -459,6 +459,14 @@
       font-size: 11px;
       color: var(--color-text-primary);
     }
+    .legend-item.clickable {
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.12s;
+    }
+    .legend-item.clickable:hover {
+      background: rgba(155, 28, 46, 0.08);
+    }
     .legend-marker {
       display: inline-flex;
       align-items: center;
@@ -1070,7 +1078,7 @@
           
           {% if completed %}
           {% for t in completed | sort(attribute="year_completed") %}
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="{{ t.building_name }}">
             <span class="legend-marker" style="background: {{ region_colors[region] }};">{{ tower_abbr.get(t.building_name, '??') }}</span>
             {{ t.building_name }} ({{ t.year_completed }})
           </div>
@@ -1080,7 +1088,7 @@
           {% if construction %}
           <div class="legend-status-divider">완공 예정</div>
           {% for t in construction | sort(attribute="year_completed") %}
-          <div class="legend-item">
+          <div class="legend-item clickable" data-building="{{ t.building_name }}">
             <span class="legend-marker under-construction" style="background: {{ region_colors[region] }};">{{ tower_abbr.get(t.building_name, '??') }}</span>
             {{ t.building_name }} ({{ t.year_completed }})
           </div>
@@ -1274,7 +1282,7 @@
             <td>${u.unit_no || "-"}</td>
             <td>${fmtInt(u.living_sqft)}</td>
             <td>${fmtOriginalPrice(u.original_price, u.current_list_price)}</td>
-            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}</td>
+            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}${u.is_stale ? ' <span style="display:inline-block;margin-left:3px;padding:0 4px;font-size:10px;line-height:1.4;border-radius:3px;background:#FAF4E8;color:#6B4F2A;border:1px solid #C99A6B;" title="현재 활성 매물 없음' + (u.as_of ? ' · ' + u.as_of + ' 기준' : '') + '">직전 호가</span>' : ''}</td>
             <td>${fmtPct(u.appreciation_pct)}</td>
           </tr>
         `).join("");
@@ -1296,7 +1304,7 @@
             <td>${u.unit_type}</td>
             <td>${u.unit_no || "-"}</td>
             <td>${fmtInt(u.living_sqft)}</td>
-            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}</td>
+            <td>${fmtListPriceWithBadge(u.current_list_price, u.notes)}${u.is_stale ? ' <span style="display:inline-block;margin-left:3px;padding:0 4px;font-size:10px;line-height:1.4;border-radius:3px;background:#FAF4E8;color:#6B4F2A;border:1px solid #C99A6B;" title="현재 활성 매물 없음' + (u.as_of ? ' · ' + u.as_of + ' 기준' : '') + '">직전 호가</span>' : ''}</td>
             <td>${fmtMoney(u.est_rent_monthly)}</td>
             <td>${fmtYield(u.rental_yield_pct)}</td>
           </tr>
@@ -1306,7 +1314,7 @@
       return `
         ${regionBadge}
         <h3 class="popup-tower-name">${tower.building_name}</h3>
-        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 매물</p>
+        <p class="popup-tower-meta">${tower.year_completed}년 ${statusLabel} · ${tower.unit_count}개 타입${tower.active_listings != null ? ' · 매물 ' + tower.active_listings + '건' : ''}</p>
         ${towerWarning}
         ${noteHTML}
         <table class="popup-table">
@@ -1368,6 +1376,18 @@
 
     document.getElementById("legend-header").addEventListener("click", () => {
       document.getElementById("legend").classList.toggle("expanded");
+    });
+
+    // 범례에서 콘도 이름 클릭 → 해당 마커로 이동 + 팝업 열기
+    document.querySelectorAll(".legend-item.clickable").forEach(item => {
+      item.addEventListener("click", () => {
+        const marker = markerMap[item.dataset.building];
+        if (!marker) return;
+        document.getElementById("legend").classList.remove("expanded"); // 모바일에서 지도 보이게
+        const targetZoom = Math.max(map.getZoom(), 16);
+        map.flyTo(marker.getLatLng(), targetZoom, { duration: 0.6 });
+        map.once("moveend", () => marker.openPopup());
+      });
     });
 
     document.getElementById("insights-toggle").addEventListener("click", () => {

@@ -61,6 +61,7 @@ UNIT_TYPE_ORDER = {
     "2BR-01": 3,
     "2BR-02": 3,
     "2BR(2b3b)": 3,
+    "2BR(대형)": 4,
     "2BR Pod": 3,
     "2BR Tower": 4,
     "Tower 2BR": 4,
@@ -70,6 +71,8 @@ UNIT_TYPE_ORDER = {
     "3BR Pod": 5,
     "3BR Tower": 6,
     "Tower 3BR": 6,
+    "4BR": 7,
+    "5BR(PH)": 8,
     "Villa": 7,
     "PH": 8,
     "PT": 9,
@@ -91,6 +94,69 @@ def unit_sort_key(u):
     
     # has_price=True가 먼저 오게 하기 위해 False=1, True=0
     return (type_order, 0 if has_price else 1, price)
+
+
+# ============================================================
+# 대표 매물 선정 (타입별 시세 1개)
+# ============================================================
+
+def _is_active_listing(u):
+    """현재 시장에 올라와 있는(가격이 있는) 매물인가.
+    is_active 컬럼이 없던 옛 데이터도 안전: 가격이 있으면 활성으로 간주."""
+    return bool(u.get("is_active", True)) and u.get("current_list_price") is not None
+
+
+def select_representatives(units):
+    """
+    한 building의 unit들을 unit_type별로 묶어 '대표 1개'씩 선정한다.
+
+    규칙 — 활성 매물 중 '2번째 최고가'.
+      (최고가는 허위/과대호가일 수 있어 한 칸 깎아서 본다)
+        · 활성 3개 이상 : 가격 내림차순 2번째
+        · 활성 2개      : 둘 중 낮은 쪽 (= 2번째 최고가)
+        · 활성 1개      : 그 1개
+        · 활성 0개      : 가격이 남아 있는 비활성 매물 중 최신(last_seen)을
+                          '직전 호가(stale)'로 표시. 그것도 없으면 타입 자체를 숨김.
+
+    각 대표 unit에 메타를 부여:
+        listing_count : 그 타입의 현재 활성 매물 수
+        is_stale      : 활성 0개라 과거 값으로 대체했는가
+        as_of         : stale일 때 그 값의 기준일(last_seen), 아니면 None
+    """
+    by_type = defaultdict(list)
+    for u in units:
+        by_type[u.get("unit_type", "")].append(u)
+
+    reps = []
+    for _unit_type, group in by_type.items():
+        actives = sorted(
+            [u for u in group if _is_active_listing(u)],
+            key=lambda u: u["current_list_price"],
+            reverse=True,
+        )
+
+        if len(actives) >= 2:
+            rep = dict(actives[1])          # 2번째 최고가
+            rep["is_stale"] = False
+            rep["as_of"] = None
+        elif len(actives) == 1:
+            rep = dict(actives[0])
+            rep["is_stale"] = False
+            rep["as_of"] = None
+        else:
+            # 활성 0개 → 직전 호가(stale). 가격이 남아 있는 비활성 매물 중 최신.
+            priced = [u for u in group if u.get("current_list_price") is not None]
+            if not priced:
+                continue                    # 보여줄 시세가 전혀 없음 → 표시 안 함
+            priced.sort(key=lambda u: (u.get("last_seen") or ""), reverse=True)
+            rep = dict(priced[0])
+            rep["is_stale"] = True
+            rep["as_of"] = rep.get("last_seen")
+
+        rep["listing_count"] = len(actives)
+        reps.append(rep)
+
+    return reps
 
 
 # ============================================================
@@ -198,7 +264,8 @@ def fetch_and_enrich():
             "id, building_name, neighborhood, year_completed, status, latitude, longitude, notes, "
     "units(id, unit_type, unit_no, living_sqft, "
           "original_price, current_list_price, est_rent_monthly, "
-          "hoa_monthly, view_type, listing_url, notes)"
+          "hoa_monthly, view_type, listing_url, notes, "
+          "is_active, first_seen, last_seen)"
         )
         .order("year_completed")
         .execute()
@@ -217,11 +284,14 @@ def fetch_and_enrich():
             u["rental_yield_pct"] = compute_rental_yield(u["est_rent_monthly"], u["current_list_price"])
             enriched_units.append(u)
         
-        # 의미적 정렬 적용
-        enriched_units.sort(key=unit_sort_key)
-        
-        total_units += len(enriched_units)
-        
+        # 타입별 대표 1개 자동 선정 (raw 매물 → 시세 1개)
+        representatives = select_representatives(enriched_units)
+
+        # 의미적 정렬 적용 (대표들끼리 침실 수 순)
+        representatives.sort(key=unit_sort_key)
+
+        total_units += len(representatives)
+
         towers_output.append({
             "building_name": tower["building_name"],
     "neighborhood": tower["neighborhood"],
@@ -230,8 +300,9 @@ def fetch_and_enrich():
     "latitude": tower["latitude"],
     "longitude": tower["longitude"],
     "notes": tower.get("notes"),
-    "units": enriched_units,
-    "unit_count": len(enriched_units),
+    "units": representatives,
+    "unit_count": len(representatives),
+    "active_listings": sum(1 for u in enriched_units if _is_active_listing(u)),
         })
     
     # 통계 계산

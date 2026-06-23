@@ -114,7 +114,11 @@ PAGES = [
 # ============================================================
 def load_data():
     with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+        raw = f.read()
+    # 동기화 과정에서 끝에 널바이트(\x00)나 공백이 붙어도 빌드가 죽지 않게 방어
+    raw = raw.lstrip("﻿").strip().rstrip("\x00").strip()
+    obj, _ = json.JSONDecoder().raw_decode(raw)  # 첫 JSON만 파싱, 뒤 잡데이터 무시
+    return obj
 
 
 def filter_data_by_regions(data, regions):

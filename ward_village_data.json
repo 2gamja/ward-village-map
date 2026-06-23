@@ -1,5 +1,5 @@
 {
-  "build_timestamp": "2026-06-23T16:44:41.764202",
+  "build_timestamp": "2026-06-23T16:46:45.271424",
   "total_units": 88,
   "total_towers": 31,
   "towers": [
@@ -518,30 +518,30 @@
       "notes": "PT, Villa 포함 럭셔리 라인",
       "units": [
         {
-          "id": 196,
-          "notes": null,
+          "id": 59,
+          "notes": "26년 3월 가격인상\r\n#2003 25년 매매",
           "unit_no": "2903",
           "is_active": true,
           "last_seen": "2026-06-23",
           "unit_type": "1BR",
-          "view_type": null,
+          "view_type": "Ocean",
           "first_seen": "2026-06-23",
-          "hoa_monthly": null,
-          "listing_url": null,
+          "hoa_monthly": 2281.0,
+          "listing_url": "https://www.zillow.com/homedetails/1118-Ala-Moana-Blvd-2903-Honolulu-HI-96814/123873347_zpid/?utm_campaign=zillowwebmessage&utm_medium=referral&utm_source=txtshare",
           "living_sqft": 1139,
           "original_price": 1761000.0,
-          "est_rent_monthly": 6016.0,
+          "est_rent_monthly": 5533.0,
           "current_list_price": 2098000.0,
           "appreciation_pct": 19.14,
           "capital_gain": 337000.0,
           "price_per_sqft": 1841.97,
-          "rental_yield_pct": 3.44,
+          "rental_yield_pct": 3.16,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 3
+          "listing_count": 1
         },
         {
-          "id": 197,
+          "id": 192,
           "notes": null,
           "unit_no": "805",
           "is_active": true,
@@ -561,10 +561,10 @@
           "rental_yield_pct": 3.81,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
-          "id": 198,
+          "id": 193,
           "notes": null,
           "unit_no": "1002",
           "is_active": true,
@@ -584,10 +584,10 @@
           "rental_yield_pct": 2.89,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
-          "id": 199,
+          "id": 194,
           "notes": null,
           "unit_no": "1606",
           "is_active": true,
@@ -607,7 +607,7 @@
           "rental_yield_pct": null,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
           "id": 65,
@@ -633,7 +633,7 @@
           "listing_count": 1
         },
         {
-          "id": 200,
+          "id": 195,
           "notes": null,
           "unit_no": "2",
           "is_active": true,
@@ -653,7 +653,7 @@
           "rental_yield_pct": 1.67,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
           "id": 66,
@@ -703,7 +703,7 @@
         }
       ],
       "unit_count": 8,
-      "active_listings": 13
+      "active_listings": 7
     },
     {
       "building_name": "Symphony Honolulu",

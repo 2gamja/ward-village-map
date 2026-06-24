@@ -7,18 +7,22 @@ Write-Host "  Ward Village 시세맵 주간 업데이트" -ForegroundColor Cyan
 Write-Host "================================================================" -ForegroundColor Cyan
 Write-Host ""
 
+# venv 파이썬을 항상 사용 (활성화 안 해도 됨). 없으면 시스템 python으로 폴백.
+$py = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path $py)) { $py = "python" }
+
 Write-Host "[1/3] Supabase에서 데이터 가져오기..." -ForegroundColor Yellow
-python build_data.py
+& $py build_data.py
 if ($LASTEXITCODE -ne 0) { Write-Host "build_data.py 실패!" -ForegroundColor Red; exit 1 }
 
 Write-Host ""
 Write-Host "[2/3] 지난주 대비 변경 사항 확인..." -ForegroundColor Yellow
-python diff_data.py
+& $py diff_data.py
 if ($LASTEXITCODE -ne 0) { Write-Host "diff_data.py 실패!" -ForegroundColor Red; exit 1 }
 
 Write-Host ""
 Write-Host "[3/3] 시세맵 HTML 빌드..." -ForegroundColor Yellow
-python build_html.py
+& $py build_html.py
 if ($LASTEXITCODE -ne 0) { Write-Host "build_html.py 실패!" -ForegroundColor Red; exit 1 }
 
 Write-Host ""

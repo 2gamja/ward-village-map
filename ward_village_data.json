@@ -1,5 +1,5 @@
 {
-  "build_timestamp": "2026-07-01T17:31:27.846427",
+  "build_timestamp": "2026-07-01T17:38:31.359898",
   "total_units": 88,
   "total_towers": 31,
   "towers": [
@@ -49,24 +49,24 @@
       "notes": "2470 Kalakaua Ave, Honolulu, HI [leasehold-converted]",
       "units": [
         {
-          "id": 132,
+          "id": 133,
           "notes": null,
-          "unit_no": "504",
+          "unit_no": "1402",
           "is_active": true,
           "last_seen": "2026-06-23",
           "unit_type": "2BR",
           "view_type": "Ocean",
           "first_seen": "2026-06-23",
-          "hoa_monthly": 3613.0,
-          "listing_url": "https://www.zillow.com/homedetails/2470-Kalakaua-Ave-APT-504-Honolulu-HI-96815/82504972_zpid/",
-          "living_sqft": 1092,
-          "original_price": 320000.0,
-          "est_rent_monthly": 4363.0,
-          "current_list_price": 770000.0,
-          "appreciation_pct": 140.62,
-          "capital_gain": 450000.0,
-          "price_per_sqft": 705.13,
-          "rental_yield_pct": 6.8,
+          "hoa_monthly": 3380.0,
+          "listing_url": "https://www.zillow.com/homedetails/2470-Kalakaua-Ave-APT-1402-Honolulu-HI-96815/82516370_zpid/",
+          "living_sqft": 1025,
+          "original_price": 380000.0,
+          "est_rent_monthly": 3968.0,
+          "current_list_price": 2560000.0,
+          "appreciation_pct": 573.68,
+          "capital_gain": 2180000.0,
+          "price_per_sqft": 2497.56,
+          "rental_yield_pct": 1.86,
           "is_stale": false,
           "as_of": null,
           "listing_count": 2
@@ -2428,13 +2428,13 @@
       "label": "전체 시장",
       "total_units": 88,
       "listed_units": 88,
-      "avg_appreciation_pct": 35.08,
-      "avg_yield_pct": 3.77,
+      "avg_appreciation_pct": 40.43,
+      "avg_yield_pct": 3.72,
       "top_appreciation": {
-        "building_name": "Hokua",
-        "unit_type": "3BR",
-        "unit_no": "8A",
-        "value": 378.26
+        "building_name": "Waikiki Beach Tower",
+        "unit_type": "2BR",
+        "unit_no": "1402",
+        "value": 573.68
       },
       "bottom_appreciation": {
         "building_name": "ONE Ala Moana",

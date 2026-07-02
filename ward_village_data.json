@@ -1,5 +1,5 @@
 {
-  "build_timestamp": "2026-07-02T17:50:45.844004",
+  "build_timestamp": "2026-07-02T17:55:40.433711",
   "total_units": 88,
   "total_towers": 31,
   "towers": [
@@ -1007,27 +1007,27 @@
       "notes": "555 South St.",
       "units": [
         {
-          "id": 179,
-          "notes": null,
-          "unit_no": "3409",
+          "id": 239,
+          "notes": "1bd 1ba",
+          "unit_no": "3410",
           "is_active": true,
-          "last_seen": "2026-06-23",
+          "last_seen": "2026-07-02",
           "unit_type": "1BR",
-          "view_type": "Ocean",
-          "first_seen": "2026-06-23",
-          "hoa_monthly": 738.0,
-          "listing_url": "https://www.zillow.com/homedetails/555-South-St-3409-Honolulu-HI-96813/243811934_zpid/",
-          "living_sqft": 636,
-          "original_price": 565800.0,
-          "est_rent_monthly": 2939.0,
-          "current_list_price": 724900.0,
-          "appreciation_pct": 28.12,
-          "capital_gain": 159100.0,
-          "price_per_sqft": 1139.78,
-          "rental_yield_pct": 4.87,
+          "view_type": "City",
+          "first_seen": "2026-07-02",
+          "hoa_monthly": null,
+          "listing_url": null,
+          "living_sqft": 629,
+          "original_price": 538630.0,
+          "est_rent_monthly": 2954.0,
+          "current_list_price": 698000.0,
+          "appreciation_pct": 29.59,
+          "capital_gain": 159370.0,
+          "price_per_sqft": 1109.7,
+          "rental_yield_pct": 5.08,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
           "id": 181,
@@ -1050,14 +1050,14 @@
           "rental_yield_pct": 5.22,
           "is_stale": false,
           "as_of": null,
-          "listing_count": 2
+          "listing_count": 1
         },
         {
           "id": 183,
           "notes": null,
           "unit_no": "1305",
           "is_active": true,
-          "last_seen": "2026-06-23",
+          "last_seen": "2026-07-02",
           "unit_type": "3BR",
           "view_type": "Ocean",
           "first_seen": "2026-06-23",
@@ -1066,11 +1066,11 @@
           "living_sqft": 1346,
           "original_price": 907900.0,
           "est_rent_monthly": 4761.0,
-          "current_list_price": 1325000.0,
-          "appreciation_pct": 45.94,
-          "capital_gain": 417100.0,
-          "price_per_sqft": 984.4,
-          "rental_yield_pct": 4.31,
+          "current_list_price": 1275000.0,
+          "appreciation_pct": 40.43,
+          "capital_gain": 367100.0,
+          "price_per_sqft": 947.25,
+          "rental_yield_pct": 4.48,
           "is_stale": false,
           "as_of": null,
           "listing_count": 1
@@ -1100,7 +1100,7 @@
         }
       ],
       "unit_count": 4,
-      "active_listings": 6
+      "active_listings": 4
     },
     {
       "building_name": "Anaha",
@@ -2428,7 +2428,7 @@
       "label": "전체 시장",
       "total_units": 88,
       "listed_units": 88,
-      "avg_appreciation_pct": 50.85,
+      "avg_appreciation_pct": 50.8,
       "avg_yield_pct": 3.68,
       "top_appreciation": {
         "building_name": "Waikiki Banyan",

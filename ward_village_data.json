@@ -1,6 +1,6 @@
 {
-  "build_timestamp": "2026-07-03T16:43:21.508430",
-  "total_units": 88,
+  "build_timestamp": "2026-07-03T16:47:41.419841",
+  "total_units": 89,
   "total_towers": 31,
   "towers": [
     {
@@ -1240,24 +1240,47 @@
       "notes": "1631 Kapiolani Blvd.",
       "units": [
         {
-          "id": 170,
-          "notes": null,
-          "unit_no": "3603",
+          "id": 247,
+          "notes": "1bd 1ba",
+          "unit_no": "3403",
           "is_active": true,
-          "last_seen": "2026-06-23",
+          "last_seen": "2026-07-03",
           "unit_type": "1BR",
-          "view_type": "Ocean",
-          "first_seen": "2026-06-23",
-          "hoa_monthly": 675.0,
-          "listing_url": "https://www.zillow.com/homedetails/1631-Kapiolani-Blvd-APT-3603-Honolulu-HI-96814/241842814_zpid/",
+          "view_type": "City",
+          "first_seen": "2026-07-03",
+          "hoa_monthly": null,
+          "listing_url": null,
           "living_sqft": 696,
-          "original_price": 515000.0,
-          "est_rent_monthly": 3533.0,
-          "current_list_price": 649000.0,
-          "appreciation_pct": 26.02,
-          "capital_gain": 134000.0,
-          "price_per_sqft": 932.47,
-          "rental_yield_pct": 6.53,
+          "original_price": 506500.0,
+          "est_rent_monthly": 3452.0,
+          "current_list_price": 703000.0,
+          "appreciation_pct": 38.8,
+          "capital_gain": 196500.0,
+          "price_per_sqft": 1010.06,
+          "rental_yield_pct": 5.89,
+          "is_stale": false,
+          "as_of": null,
+          "listing_count": 1
+        },
+        {
+          "id": 248,
+          "notes": "2bd 2ba",
+          "unit_no": "4201",
+          "is_active": true,
+          "last_seen": "2026-07-03",
+          "unit_type": "2BR",
+          "view_type": "City",
+          "first_seen": "2026-07-03",
+          "hoa_monthly": null,
+          "listing_url": null,
+          "living_sqft": 892,
+          "original_price": 744000.0,
+          "est_rent_monthly": 4245.0,
+          "current_list_price": 880000.0,
+          "appreciation_pct": 18.28,
+          "capital_gain": 136000.0,
+          "price_per_sqft": 986.55,
+          "rental_yield_pct": 5.79,
           "is_stale": false,
           "as_of": null,
           "listing_count": 1
@@ -1267,7 +1290,7 @@
           "notes": null,
           "unit_no": "4106",
           "is_active": true,
-          "last_seen": "2026-06-23",
+          "last_seen": "2026-07-03",
           "unit_type": "3BR",
           "view_type": "Ocean",
           "first_seen": "2026-06-23",
@@ -1286,8 +1309,8 @@
           "listing_count": 1
         }
       ],
-      "unit_count": 2,
-      "active_listings": 2
+      "unit_count": 3,
+      "active_listings": 3
     },
     {
       "building_name": "Ritz-Carlton Residences Waikiki Beach",
@@ -2426,10 +2449,10 @@
   "stats": {
     "overall": {
       "label": "전체 시장",
-      "total_units": 88,
-      "listed_units": 88,
-      "avg_appreciation_pct": 50.08,
-      "avg_yield_pct": 3.65,
+      "total_units": 89,
+      "listed_units": 89,
+      "avg_appreciation_pct": 49.84,
+      "avg_yield_pct": 3.67,
       "top_appreciation": {
         "building_name": "Waikiki Banyan",
         "unit_type": "1BR",
